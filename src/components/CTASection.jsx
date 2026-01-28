@@ -16,7 +16,7 @@ function CTASection() {
       </p>
       
       {/* The button is now wrapped in a link */}
-      <a href="https://github.com/Somesh520/Kietkt/releases/download/v1.1.3/BunkBook.apk">
+      <a href="https://github.com/Somesh520/Kietkt/releases/download/v1.1.4/BunkBook.apk">
         <button
           className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-12 py-6 text-2xl rounded-lg font-bold shadow-lg hover:scale-105 transition animated-gradient-button"
           data-aos="zoom-in"
