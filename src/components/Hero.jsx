@@ -25,7 +25,7 @@ function Hero({ isDark }) {
 
         <div className="max-w-4xl mx-auto space-y-4 text-gray-700 dark:text-gray-200 text-lg sm:text-xl md:text-3xl lg:text-4xl">
           <p className="underline decoration-2 underline-offset-4 mb-6">Keep Touching The BunkBook Logo</p>
-          <a href="https://github.com/Somesh520/Kietkt/releases/download/v1.1.2/BunkBook.apk" className="mt-8">
+          <a href="https://github.com/Somesh520/Kietkt/releases/download/v1.1.3/BunkBook.apk" className="mt-8">
           <button
             className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-4 rounded-lg font-bold text-lg sm:text-xl md:px-12 md:py-6 md:text-2xl shadow-lg hover:scale-105 transition animated-gradient-button"
             data-aos="zoom-in"
