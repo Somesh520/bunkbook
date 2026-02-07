@@ -1,8 +1,8 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
 
-export default function ParticleBackground({ isDark }) {
+const ParticleBackground = React.memo(({ isDark }) => {
   const particlesInit = useCallback(async (engine) => {
     await loadSlim(engine);
   }, []);
@@ -11,7 +11,7 @@ export default function ParticleBackground({ isDark }) {
   const linkColor = isDark ? "#ffffff" : "#cccccc";
   const backgroundColor = isDark ? "#111418" : "#f7fafc";
 
-  const particleOptions = {
+  const particleOptions = useMemo(() => ({
     fullScreen: {
       enable: false,
     },
@@ -53,7 +53,6 @@ export default function ParticleBackground({ isDark }) {
       },
       modes: {
         repulse: {
-          // FIX: Increased the interaction distance from 100 to 200
           distance: 200,
           duration: 0.4,
         },
@@ -63,7 +62,7 @@ export default function ParticleBackground({ isDark }) {
       },
     },
     detectRetina: true,
-  };
+  }), [backgroundColor, particleColor, linkColor]);
 
   return (
     <Particles
@@ -73,4 +72,6 @@ export default function ParticleBackground({ isDark }) {
       className="absolute top-0 left-0 w-full h-full"
     />
   );
-}
+});
+
+export default ParticleBackground;

@@ -8,6 +8,12 @@ function FeedbackForm() {
   const submit = (e) => {
     e.preventDefault();
     setDone(true);
+
+    // Construct mailto link
+    const subject = encodeURIComponent("BunkBook Feedback");
+    const body = encodeURIComponent(`From: ${email}\n\nMessage:\n${msg}`);
+    window.location.href = `mailto:someshtiwari.in@gmail.com?subject=${subject}&body=${body}`;
+
     setTimeout(() => {
       setDone(false);
       setEmail("");

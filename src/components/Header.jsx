@@ -1,58 +1,90 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import logo from '../assets/logos.png';
 
 function Header({ dark, setDark }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Handle scroll effect for additional styling
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-white/5 dark:bg-black/90 backdrop-blur-sm py-4 transition-colors duration-500">
+    <header
+      className={`fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-5xl z-50 
+      transition-all duration-300 rounded-full border border-white/20 dark:border-gray-700/30
+      ${scrolled ? "bg-white/70 dark:bg-black/80 shadow-xl backdrop-blur-md py-2" : "bg-white/30 dark:bg-black/40 backdrop-blur-sm shadow-lg py-3"}`}
+    >
+      <div className="flex items-center justify-between px-6">
 
-      <div className="max-w-8xl mx-auto flex items-center justify-between px-4">
-        {/* Logo + Title */}
-        <div className="flex items-center space-x-2">
-          <img src={logo} alt="BunkBook Logo" className="w-12 h-12 rounded-full" />
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-blue-400">
+        {/* Logo */}
+        <div className="flex items-center gap-3">
+          <img src={logo} alt="BunkBook Logo" className="w-10 h-10 rounded-full shadow-sm hover:rotate-12 transition-transform duration-300" />
+          <h1 className="text-xl md:text-2xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hidden sm:block tracking-tight">
             BunkBook
           </h1>
         </div>
 
-        {/* Right side: Toggle + Hamburger */}
-        <div className="flex items-center gap-4">
-          {/* Dark Mode Toggle (always visible) */}
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex items-center gap-8">
+          {['Features', 'Screenshots', 'FAQ', 'About'].map((item) => (
+            <a
+              key={item}
+              href={`#${item.toLowerCase()}`}
+              className="text-sm font-semibold text-gray-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors relative group"
+            >
+              {item}
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 transition-all duration-300 group-hover:w-full"></span>
+            </a>
+          ))}
+        </nav>
+
+        {/* Actions */}
+        <div className="flex items-center gap-3">
           <button
             onClick={() => setDark(!dark)}
-            className="px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 rounded-lg bg-white text-black text-base sm:text-lg md:text-xl font-bold transition-colors shadow-md"
+            className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-lg active:scale-90 duration-200"
+            aria-label="Toggle Dark Mode"
           >
-            {dark ? "☀️ Light" : "🌙 Dark"}
+            {dark ? "☀️" : "🌙"}
           </button>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Toggle */}
           <button
-            className="md:hidden text-3xl text-gray-900 dark:text-gray-100"
+            className="md:hidden p-2 text-gray-800 dark:text-gray-200 focus:outline-none"
             onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle Menu"
           >
-            ☰
+            <div className="w-6 h-5 relative flex flex-col justify-between">
+              <span className={`w-full h-0.5 bg-current rounded-full transition-all duration-300 origin-left ${menuOpen ? "rotate-45" : ""}`} />
+              <span className={`w-full h-0.5 bg-current rounded-full transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`} />
+              <span className={`w-full h-0.5 bg-current rounded-full transition-all duration-300 origin-left ${menuOpen ? "-rotate-45" : ""}`} />
+            </div>
           </button>
         </div>
-
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8 text-lg md:text-2xl font-medium text-gray-900 dark:text-gray-100">
-          <a href="#features" className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors">Features</a>
-          <a href="#screenshots" className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors">Screenshots</a>
-          <a href="#faq" className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors">FAQ</a>
-          <a href="#about" className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors">About</a>
-        </nav>
       </div>
 
-      {/* Mobile Nav Dropdown */}
-      {menuOpen && (
-        <div className="md:hidden flex flex-col items-center gap-4 py-4 bg-white/90 dark:bg-black/90 text-lg font-medium text-gray-900 dark:text-gray-100">
-          <a href="#features" onClick={() => setMenuOpen(false)}>Features</a>
-          <a href="#screenshots" onClick={() => setMenuOpen(false)}>Screenshots</a>
-          <a href="#faq" onClick={() => setMenuOpen(false)}>FAQ</a>
-          <a href="#about" onClick={() => setMenuOpen(false)}>About</a>
+      {/* Mobile Menu Overlay */}
+      <div className={`absolute top-full left-0 w-full mt-2 rounded-3xl overflow-hidden bg-white/95 dark:bg-black/95 backdrop-blur-xl border border-white/20 shadow-2xl transition-all duration-300 origin-top transform
+        ${menuOpen ? "scale-y-100 opacity-100 visible" : "scale-y-0 opacity-0 invisible"}`}>
+        <div className="flex flex-col items-center py-6 gap-6">
+          {['Features', 'Screenshots', 'FAQ', 'About'].map((item) => (
+            <a
+              key={item}
+              href={`#${item.toLowerCase()}`}
+              className="text-lg font-bold text-gray-800 dark:text-gray-200 hover:text-blue-500 transition-colors"
+              onClick={() => setMenuOpen(false)}
+            >
+              {item}
+            </a>
+          ))}
         </div>
-      )}
+      </div>
     </header>
   );
 }
