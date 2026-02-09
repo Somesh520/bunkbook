@@ -41,7 +41,7 @@ function Hero({ isDark }) {
             </p>
 
             <div className="pt-4 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start" data-aos="fade-up" data-aos-delay="200">
-              <a href="https://github.com/Somesh520/Kietkt/releases/download/v1.1.3/BunkBook.apk" className="group relative">
+              <a href="https://github.com/Somesh520/Kietkt/releases/download/v1.1.4/BunkBook.apk" className="group relative">
                 <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl blur opacity-30 group-hover:opacity-60 transition duration-200"></div>
                 <button className="relative px-8 py-4 bg-gray-900 dark:bg-black text-white rounded-xl font-bold text-lg shadow-2xl flex items-center gap-3 ring-1 ring-white/10 group-hover:ring-blue-500/50 transition-all">
                   download_app
