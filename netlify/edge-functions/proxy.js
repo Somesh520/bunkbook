@@ -12,6 +12,8 @@ export default async (request, context) => {
   if (request.headers.has("accept")) headers.set("accept", request.headers.get("accept"));
   if (request.headers.has("user-agent")) headers.set("user-agent", request.headers.get("user-agent"));
   if (request.headers.has("cookie")) headers.set("cookie", request.headers.get("cookie"));
+  if (request.headers.has("authorization")) headers.set("authorization", request.headers.get("authorization"));
+  if (request.headers.has("uid")) headers.set("uid", request.headers.get("uid"));
 
   let bodyText = undefined;
   if (request.method !== "GET" && request.method !== "HEAD" && request.body) {
