@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, User, LogOut, Sun, Moon, LayoutDashboard, FileText, FileBadge, Calendar, Plane, Smartphone } from 'lucide-react';
+import { User, LogOut, Sun, Moon, LayoutDashboard, FileText, FileBadge, Plane, Smartphone } from 'lucide-react';
 import BunkbookLogo from '../assets/logos.png';
 
 const Layout = ({ children, onLogout, dark, setDark, currentTab, setCurrentTab, profile }) => {

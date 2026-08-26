@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { dataService } from '../services/api';
-import { Calendar, Award, Loader2, Book } from 'lucide-react';
+import { Calendar, Award, Loader2 } from 'lucide-react';
 
 const ExamSection = ({ dark }) => {
   const [schedule, setSchedule] = useState([]);

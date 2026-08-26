@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { authService, dataService } from '../services/api';
-import { Activity, Loader2, X, Calendar, Clock, CheckCircle2, XCircle } from 'lucide-react';
+import { Activity, Loader2, X, Calendar, CheckCircle2, XCircle } from 'lucide-react';
 import Layout from './Layout';
 import ExamSection from './ExamSection';
 import HallTicket from './HallTicket';
