@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Github, ArrowRight, User, Download } from 'lucide-react';
+import { Shield, ArrowRight, User, Download } from 'lucide-react';
 
 const teamMembers = [
   {
