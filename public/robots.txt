@@ -1,6 +1,7 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
 Allow: /
+Sitemap: https://bunkbook1.netlify.app/sitemap.xml
 
 # Bunkbook for KIET - Cybervidya ERP Alternative
 # Let search engines crawl all pages easily for better ranking.
