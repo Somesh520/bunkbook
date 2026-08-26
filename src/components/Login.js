@@ -274,6 +274,16 @@ const Login = ({ onLoginSuccess, dark }) => {
           </form>
         </div>
       </div>
+
+      {/* Made with love by Somesh */}
+      <div className="absolute bottom-4 w-full text-center z-10">
+        <p className={`text-sm font-medium opacity-80 ${dark ? 'text-slate-400' : 'text-gray-500'}`}>
+          Made with <span className="text-red-500 animate-pulse inline-block">❤️</span> by{' '}
+          <a href="https://instagram.com/someshxd" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-400 transition-colors">
+            @someshxd
+          </a>
+        </p>
+      </div>
     </div>
   );
 };
