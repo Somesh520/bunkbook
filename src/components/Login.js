@@ -127,6 +127,7 @@ const Login = ({ onLoginSuccess, dark }) => {
         </div>
         <h2 className="mt-2 text-center text-4xl font-extrabold tracking-tight">
           Welcome to <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-indigo-600">Bunkbook</span>
+          <div className="text-lg mt-1 font-bold text-gray-500 dark:text-gray-400">for KIET</div>
         </h2>
         <p className={`mt-3 text-center text-sm font-medium ${dark ? 'text-slate-400' : 'text-gray-500'}`}>
           {otpStep ? 'Enter the verification code sent to your device' : 'Sign in to access your academic dashboard'}

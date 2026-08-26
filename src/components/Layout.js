@@ -22,7 +22,7 @@ const Layout = ({ children, onLogout, dark, setDark, currentTab, setCurrentTab, 
               <div className="mr-3 transition-transform group-hover:scale-105">
                 <img src={BunkbookLogo} alt="Bunkbook Logo" className="h-8 w-8 object-contain rounded-xl shadow-sm" />
               </div>
-              <span className="font-bold text-xl text-gray-900 dark:text-white tracking-tight truncate">Bunkbook</span>
+              <span className="font-bold text-xl text-gray-900 dark:text-white tracking-tight truncate">Bunkbook <span className="text-sm font-medium text-gray-500">for KIET</span></span>
             </div>
 
             {/* Right actions */}
