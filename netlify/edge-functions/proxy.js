@@ -2,16 +2,22 @@ export default async (request, context) => {
   const url = new URL(request.url);
   const kietUrl = "https://kiet.cybervidya.net" + url.pathname + url.search;
 
-  const headers = new Headers(request.headers);
-  // KIET's server might expect these headers for security/auditing
+  // Only forward safe headers to avoid crashing the Java backend with Netlify-specific headers
+  const headers = new Headers();
   headers.set("host", "kiet.cybervidya.net");
   headers.set("origin", "https://kiet.cybervidya.net");
   headers.set("referer", "https://kiet.cybervidya.net/");
+  
+  if (request.headers.has("content-type")) headers.set("content-type", request.headers.get("content-type"));
+  if (request.headers.has("accept")) headers.set("accept", request.headers.get("accept"));
+  if (request.headers.has("user-agent")) headers.set("user-agent", request.headers.get("user-agent"));
+  if (request.headers.has("cookie")) headers.set("cookie", request.headers.get("cookie"));
 
-  // Read body as text to avoid chunked transfer-encoding which crashes some Java servers
-  const bodyText = request.method !== "GET" && request.method !== "HEAD" && request.body 
-    ? await request.clone().text() 
-    : undefined;
+  let bodyText = undefined;
+  if (request.method !== "GET" && request.method !== "HEAD" && request.body) {
+    bodyText = await request.clone().text();
+    headers.set("content-length", new TextEncoder().encode(bodyText).length.toString());
+  }
 
   const proxyReq = new Request(kietUrl, {
     method: request.method,
