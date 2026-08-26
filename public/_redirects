@@ -1,0 +1,2 @@
+/api/*  https://kiet.cybervidya.net/api/:splat  200
+/*      /index.html   200
