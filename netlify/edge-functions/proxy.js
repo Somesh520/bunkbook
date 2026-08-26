@@ -2,11 +2,11 @@ export default async (request, context) => {
   const url = new URL(request.url);
   const kietUrl = "https://kiet.cybervidya.net" + url.pathname + url.search;
 
-  // Clone headers and remove host/origin to avoid KIET rejecting them
   const headers = new Headers(request.headers);
-  headers.delete("host");
-  headers.delete("origin");
-  headers.delete("referer");
+  // KIET's server might expect these headers for security/auditing
+  headers.set("host", "kiet.cybervidya.net");
+  headers.set("origin", "https://kiet.cybervidya.net");
+  headers.set("referer", "https://kiet.cybervidya.net/");
 
   const proxyReq = new Request(kietUrl, {
     method: request.method,
