@@ -25,10 +25,16 @@ function App() {
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
     
-    // Check initial auth state
+    // Check initial auth state and handle refresh persistence
     const token = authService.getToken();
-    if (token) {
+    if (token && !authService.isTokenExpired()) {
       setIsAuthenticated(true);
+      setCurrentView('dashboard');
+    } else if (token) {
+      // Token exists but is expired
+      authService.logout();
+      setIsAuthenticated(false);
+      setCurrentView('login');
     }
   }, []);
 

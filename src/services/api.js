@@ -80,6 +80,22 @@ export const authService = {
 
   getToken: () => localStorage.getItem(AUTH_TOKEN_KEY),
 
+  isTokenExpired: () => {
+    const token = localStorage.getItem(AUTH_TOKEN_KEY);
+    if (!token) return true;
+    try {
+      const parts = token.split('.');
+      if (parts.length !== 3) return false; // Not a JWT
+      const payload = JSON.parse(atob(parts[1]));
+      if (payload.exp && payload.exp * 1000 < Date.now()) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  },
+
   logout: () => {
     localStorage.removeItem(AUTH_TOKEN_KEY);
   }
