@@ -8,10 +8,15 @@ export default async (request, context) => {
   headers.set("origin", "https://kiet.cybervidya.net");
   headers.set("referer", "https://kiet.cybervidya.net/");
 
+  // Read body as text to avoid chunked transfer-encoding which crashes some Java servers
+  const bodyText = request.method !== "GET" && request.method !== "HEAD" && request.body 
+    ? await request.clone().text() 
+    : undefined;
+
   const proxyReq = new Request(kietUrl, {
     method: request.method,
     headers: headers,
-    body: request.body,
+    body: bodyText,
     redirect: "manual"
   });
 
