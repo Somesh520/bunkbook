@@ -3,14 +3,22 @@ import { dataService } from '../services/api';
 import { Plane, AlertTriangle, AlertCircle, CheckCircle, ArrowRight } from 'lucide-react';
 
 const parseCustomDate = (dateString) => {
-  try {
-    const [datePart, timePart] = dateString.split(' ');
-    const [day, month, year] = datePart.split('/');
-    const [hours, minutes, seconds] = timePart.split(':');
-    return new Date(Number(year), Number(month) - 1, Number(day), Number(hours), Number(minutes), Number(seconds));
-  } catch(e) {
-    return new Date();
+  if (!dateString) throw new Error("No date provided");
+  
+  // Try standard parsing first (handles ISO strings)
+  const standardDate = new Date(dateString);
+  if (!isNaN(standardDate.getTime())) return standardDate;
+  
+  // Try custom DD/MM/YYYY HH:MM:SS format
+  const parts = dateString.split(' ');
+  if (parts.length >= 1) {
+    const [day, month, year] = parts[0].split('/');
+    const timeParts = (parts[1] || "00:00:00").split(':');
+    const d = new Date(Number(year), Number(month) - 1, Number(day), Number(timeParts[0]), Number(timeParts[1]), Number(timeParts[2] || 0));
+    if (!isNaN(d.getTime())) return d;
   }
+  
+  throw new Error("Invalid date format");
 };
 
 const getNext14Days = () => {

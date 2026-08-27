@@ -4,6 +4,12 @@ self.addEventListener('install', (e) => {
 });
 
 self.addEventListener('fetch', (e) => {
-  // We just let the request through. This is enough for Chrome to show the Install prompt.
-  e.respondWith(fetch(e.request));
+  // We just let the request through, but catch network errors to prevent console spam
+  e.respondWith(
+    fetch(e.request).catch((err) => {
+      console.log('[Service Worker] Network request failed:', err);
+      // Return a simple offline response to avoid Uncaught Promise TypeError
+      return new Response('Offline', { status: 503, statusText: 'Service Unavailable' });
+    })
+  );
 });

@@ -227,12 +227,48 @@ export const dataService = {
 
   getWeeklySchedule: async () => {
     try {
-      // Placeholder endpoint: replace with actual backend endpoint if needed.
-      const response = await apiClient.get('/timetable/student/weekly');
+      const getFormattedDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      };
+
+      const startDateObj = new Date();
+      // Look back a bit to catch earlier classes in the week, and forward 14 days for simulator
+      startDateObj.setDate(startDateObj.getDate() - 2); 
+      const endDateObj = new Date();
+      endDateObj.setDate(startDateObj.getDate() + 16);
+
+      const weekStartDate = getFormattedDate(startDateObj);
+      const weekEndDate = getFormattedDate(endDateObj);
+
+      const url = `/student/schedule/class?weekEndDate=${weekEndDate}&weekStartDate=${weekStartDate}`;
+      const response = await apiClient.get(url);
+      
       return response.data?.data || [];
     } catch (err) {
       console.error('Failed to get weekly schedule:', err);
       return [];
+    }
+  },
+
+  getProfilePhoto: async (fullUrl) => {
+    try {
+      // Extract the path after '/api' to use the local proxy
+      let path = fullUrl;
+      const apiIndex = fullUrl.indexOf('/api');
+      if (apiIndex !== -1) {
+        path = fullUrl.substring(apiIndex + 4);
+      }
+      
+      const response = await apiClient.get(path, {
+        responseType: 'blob'
+      });
+      return window.URL.createObjectURL(new Blob([response.data]));
+    } catch (err) {
+      console.error('Failed to get profile photo:', err);
+      return null;
     }
   }
 };

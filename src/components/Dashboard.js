@@ -7,63 +7,120 @@ import HallTicket from './HallTicket';
 import About from './About';
 import TripSimulator from './TripSimulator';
 
-const AttendanceView = ({ attendance, courses, openCourseDetails }) => {
+const AttendanceView = ({ attendance, courses, openCourseDetails, profile }) => {
+  const [photoUrl, setPhotoUrl] = React.useState(null);
+  const [imgError, setImgError] = React.useState(false);
+
+  React.useEffect(() => {
+    if (profile?.profilePhoto) {
+      dataService.getProfilePhoto(profile.profilePhoto).then(url => {
+        if (url) {
+          setPhotoUrl(url);
+        } else {
+          setImgError(true);
+        }
+      });
+    }
+  }, [profile?.profilePhoto]);
+
   // Safe checks for attendance
   const presentPerc = attendance?.presentPerc || 0;
   const absentPerc = attendance?.absentPerc || 0;
 
   return (
     <div className="space-y-8 animate-fade-in-up">
-      {/* Overall Attendance Card - HERO */}
-      <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl shadow-xl shadow-indigo-900/20 p-8 text-white relative overflow-hidden">
-        {/* Decorative background blobs */}
-        <div className="absolute top-0 right-0 -mt-16 -mr-16 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 -mb-16 -ml-16 w-48 h-48 bg-purple-400 opacity-20 rounded-full blur-2xl"></div>
+      {/* Profile Card */}
+      {profile && (
+        <div className="bg-[#1e293b] border border-slate-700/50 rounded-2xl p-4 flex items-center shadow-sm">
+          <div className="mr-4 flex-shrink-0 relative">
+             {photoUrl && !imgError ? (
+               <img 
+                 src={photoUrl} 
+                 alt="Profile" 
+                 className="w-14 h-14 rounded-full border-[3px] border-blue-500/80 object-cover" 
+                 onError={() => setImgError(true)}
+               />
+             ) : (
+               <div className="w-14 h-14 rounded-full bg-blue-900/50 flex items-center justify-center text-blue-400 text-xl font-bold border-[3px] border-blue-500/80">
+                 {profile.fullName?.charAt(0) || 'U'}
+               </div>
+             )}
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-white tracking-tight leading-none">{profile.fullName}</h3>
+            <div className="flex flex-col sm:flex-row sm:items-center mt-1.5 gap-1 sm:gap-2">
+              <p className="text-slate-400 text-sm font-medium">{profile.registrationNumber}</p>
+              {(() => {
+                const sem = profile.semester || profile.currentSemester || profile.studentPersonalInformation?.semester || profile.studentPersonalInformation?.currentSemester;
+                const year = profile.year || profile.currentYear || profile.studentPersonalInformation?.year || profile.studentPersonalInformation?.currentYear;
+                
+                const parts = [];
+                if (year) parts.push(`Year ${year}`);
+                if (sem) parts.push(`Sem ${sem}`);
+                
+                if (parts.length > 0) {
+                  return (
+                    <>
+                      <span className="hidden sm:inline text-slate-500 text-xs text-opacity-50">•</span>
+                      <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-300 border border-blue-500/20 w-fit">
+                        {parts.join(' • ')}
+                      </span>
+                    </>
+                  );
+                }
+                return null;
+              })()}
+            </div>
+          </div>
+        </div>
+      )}
 
-        <h2 className="text-xl font-bold mb-8 flex items-center relative z-10">
-          <Activity className="h-6 w-6 mr-3 text-blue-200" /> Overall Attendance Overview
+      {/* Overall Attendance Card - HERO */}
+      <div className="bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-slate-700/50 rounded-3xl shadow-sm p-8 relative overflow-hidden transition-colors">
+        <h2 className="text-xl font-bold mb-8 flex items-center text-gray-900 dark:text-white">
+          <Activity className="h-6 w-6 mr-3 text-blue-500 dark:text-blue-400" /> Overall Attendance Overview
         </h2>
         
         {attendance ? (
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-10 relative z-10">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-10">
             <div className="flex items-center justify-center relative">
               <svg className="w-36 h-36 transform -rotate-90">
-                <circle cx="72" cy="72" r="60" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-white/20" />
+                <circle cx="72" cy="72" r="60" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-gray-100 dark:text-slate-700" />
                 <circle
                   cx="72" cy="72" r="60" stroke="currentColor" strokeWidth="12" fill="transparent"
                   strokeDasharray={377} strokeDashoffset={377 - (377 * presentPerc) / 100}
-                  className="text-white transition-all duration-1000 ease-out drop-shadow-md"
+                  className="text-blue-500 transition-all duration-1000 ease-out"
                   strokeLinecap="round"
                 />
               </svg>
               <div className="absolute flex flex-col items-center justify-center text-center">
-                <span className="text-4xl font-extrabold tracking-tighter">{presentPerc.toFixed(1)}%</span>
+                <span className="text-4xl font-extrabold tracking-tighter text-gray-900 dark:text-white">{presentPerc.toFixed(1)}%</span>
               </div>
             </div>
             
-            <div className="flex-1 space-y-6 bg-black/10 backdrop-blur-md rounded-2xl p-6 border border-white/10">
+            <div className="flex-1 space-y-6 bg-gray-50 dark:bg-black/20 rounded-2xl p-6 border border-gray-100 dark:border-white/5">
               <div>
                 <div className="flex justify-between text-sm font-semibold mb-2">
-                  <span className="text-green-100">Present</span>
-                  <span className="text-white">{presentPerc.toFixed(1)}%</span>
+                  <span className="text-gray-600 dark:text-gray-300">Present</span>
+                  <span className="text-gray-900 dark:text-white">{presentPerc.toFixed(1)}%</span>
                 </div>
-                <div className="h-3 bg-white/10 rounded-full overflow-hidden">
-                  <div className="h-full bg-green-400 shadow-[0_0_12px_rgba(74,222,128,0.6)] transition-all duration-1000" style={{ width: `${presentPerc}%` }} />
+                <div className="h-3 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                  <div className="h-full bg-green-500 transition-all duration-1000" style={{ width: `${presentPerc}%` }} />
                 </div>
               </div>
               <div>
                 <div className="flex justify-between text-sm font-semibold mb-2">
-                  <span className="text-red-100">Absent</span>
-                  <span className="text-white">{absentPerc.toFixed(1)}%</span>
+                  <span className="text-gray-600 dark:text-gray-300">Absent</span>
+                  <span className="text-gray-900 dark:text-white">{absentPerc.toFixed(1)}%</span>
                 </div>
-                <div className="h-3 bg-white/10 rounded-full overflow-hidden">
-                  <div className="h-full bg-red-400 shadow-[0_0_12px_rgba(248,113,113,0.6)] transition-all duration-1000" style={{ width: `${absentPerc}%` }} />
+                <div className="h-3 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                  <div className="h-full bg-red-500 transition-all duration-1000" style={{ width: `${absentPerc}%` }} />
                 </div>
               </div>
             </div>
           </div>
         ) : (
-          <p className="text-sm text-blue-100 relative z-10">Attendance data not available.</p>
+          <p className="text-sm text-gray-500 dark:text-slate-400">Attendance data not available.</p>
         )}
       </div>
 
@@ -259,6 +316,7 @@ const Dashboard = ({ onLogout, dark, setDark }) => {
           attendance={attendance} 
           courses={courses} 
           openCourseDetails={openCourseDetails} 
+          profile={profile}
         />
       )}
       
@@ -268,7 +326,7 @@ const Dashboard = ({ onLogout, dark, setDark }) => {
       
       {currentTab === 'hallticket' && <HallTicket profile={profile} />}
       
-      {currentTab === 'about' && <About />}
+      {currentTab === 'about' && <About profile={profile} />}
 
       {/* Lecture Details Modal */}
       {selectedCourse && (
