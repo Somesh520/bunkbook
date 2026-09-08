@@ -20,11 +20,14 @@ function proxyHeaders(request) {
 function rewriteCookies(response) {
   const rewritten = new Response(response.body, response);
   const cookies = response.headers.getSetCookie?.() ?? [];
+  const normalizeCookie = (cookie) => cookie
+    .replace(/Domain=[^;]+;?/gi, "")
+    .replace(/Path=[^;]+/i, "Path=/");
 
   if (cookies.length > 0) {
     rewritten.headers.delete("set-cookie");
     for (const cookie of cookies) {
-      rewritten.headers.append("set-cookie", cookie.replace(/Domain=[^;]+;?/gi, ""));
+      rewritten.headers.append("set-cookie", normalizeCookie(cookie));
     }
   }
 
@@ -40,7 +43,8 @@ export default {
         method: request.method,
         headers: proxyHeaders(request),
         body: request.method === "GET" || request.method === "HEAD" ? undefined : request.body,
-        redirect: "manual"
+        redirect: "manual",
+        credentials: "include"
       });
 
       return rewriteCookies(response);

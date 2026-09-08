@@ -19,7 +19,7 @@ export function encryptText(text) {
   return encrypted.toString();
 }
 
-export const apiClient = axios.create({ baseURL: API_BASE_URL });
+export const apiClient = axios.create({ baseURL: API_BASE_URL, withCredentials: true });
 
 apiClient.interceptors.request.use(
     (config) => {
@@ -58,7 +58,7 @@ export const authService = {
       'Content-Type': 'application/json',
     };
     
-    return axios.post(`${API_BASE_URL}/auth/encrypt/login`, payload, { headers, timeout: 15000 });
+    return axios.post(`${API_BASE_URL}/auth/encrypt/login`, payload, { headers, timeout: 15000, withCredentials: true });
   },
 
   verifyOtp: async (otp, transactionId) => {
@@ -73,7 +73,7 @@ export const authService = {
       'Content-Type': 'application/json',
     };
 
-    return axios.post(`${API_BASE_URL}/auth/verify/otp`, payload, { headers, timeout: 15000 });
+    return axios.post(`${API_BASE_URL}/auth/verify/otp`, payload, { headers, timeout: 15000, withCredentials: true });
   },
 
   setToken: (token) => {
