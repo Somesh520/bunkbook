@@ -32,6 +32,20 @@ const getTransactionId = (value) => {
   return '';
 };
 
+const getAuthToken = (value) => {
+  if (!value || typeof value !== 'object') return '';
+
+  for (const [key, candidate] of Object.entries(value)) {
+    if (/^(token|id_token)$/i.test(key) && typeof candidate === 'string' && candidate.trim()) {
+      return candidate.trim();
+    }
+    const nestedToken = getAuthToken(candidate);
+    if (nestedToken) return nestedToken;
+  }
+
+  return '';
+};
+
 const Login = ({ onLoginSuccess, dark }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -79,15 +93,14 @@ const Login = ({ onLoginSuccess, dark }) => {
     try {
       const response = await authService.login(username, password);
       const data = response.data;
+      const receivedAuthToken = getAuthToken(data);
       const receivedTransactionId = getTransactionId(data);
 
-      if (data?.token) {
-        handleLoginSuccessMethod(data.token);
+      if (receivedAuthToken) {
+        handleLoginSuccessMethod(receivedAuthToken);
       } else if (receivedTransactionId) {
         setTransactionId(receivedTransactionId);
         setOtpStep(true);
-      } else if (data?.id_token) {
-        handleLoginSuccessMethod(data.id_token);
       } else if (typeof data?.message === 'string' && data.message.toLowerCase().includes('otp')) {
         setErrorMsg('Login did not return a transaction ID. Please try again.');
       } else {
@@ -120,15 +133,10 @@ const Login = ({ onLoginSuccess, dark }) => {
     try {
       const response = await authService.verifyOtp(otp, transactionId);
       const data = response.data;
+      const receivedAuthToken = getAuthToken(data);
 
-      if (data?.token) {
-        handleLoginSuccessMethod(data.token);
-      } else if (data?.id_token) {
-        handleLoginSuccessMethod(data.id_token);
-      } else if (data?.data?.token) {
-        handleLoginSuccessMethod(data.data.token);
-      } else if (data?.data?.id_token) {
-        handleLoginSuccessMethod(data.data.id_token);
+      if (receivedAuthToken) {
+        handleLoginSuccessMethod(receivedAuthToken);
       } else if (typeof data?.data === 'string' && data.data.length > 20) {
         handleLoginSuccessMethod(data.data);
       } else {
