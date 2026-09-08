@@ -65,7 +65,6 @@ export const authService = {
     const payload = {
       otp,
       transactionId,
-      transactionID: transactionId,
       device: "WEB",
       version: null
     };

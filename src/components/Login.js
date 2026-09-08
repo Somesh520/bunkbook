@@ -8,14 +8,18 @@ const getTransactionId = (value) => {
     try {
       return getTransactionId(JSON.parse(value));
     } catch {
-      return '';
+      const normalized = value.trim();
+      return normalized && !/^(null|undefined|\[object object\])$/i.test(normalized)
+        ? normalized
+        : '';
     }
   }
   if (!value || typeof value !== 'object') return '';
 
   for (const [key, candidate] of Object.entries(value)) {
-    if (/^transaction[_-]?id$/i.test(key) && candidate != null) {
-      return String(candidate).trim();
+    if (/^transaction[_-]?id$/i.test(key)) {
+      const nestedId = getTransactionId(candidate);
+      if (nestedId) return nestedId;
     }
     const nestedId = getTransactionId(candidate);
     if (nestedId) return nestedId;
