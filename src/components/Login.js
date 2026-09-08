@@ -3,13 +3,17 @@ import { authService } from '../services/api';
 import { Lock, User, KeyRound, AlertCircle, Loader2, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import BunkbookLogo from '../assets/logos.png';
 
+const isUuid = (value) =>
+  typeof value === 'string' &&
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value.trim());
+
 const getTransactionId = (value) => {
   if (typeof value === 'string') {
     try {
       return getTransactionId(JSON.parse(value));
     } catch {
       const normalized = value.trim();
-      return normalized && !/^(null|undefined|\[object object\])$/i.test(normalized)
+      return isUuid(normalized)
         ? normalized
         : '';
     }
