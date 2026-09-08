@@ -3,6 +3,20 @@ import { authService } from '../services/api';
 import { Lock, User, KeyRound, AlertCircle, Loader2, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import BunkbookLogo from '../assets/logos.png';
 
+const getTransactionId = (value) => {
+  if (!value || typeof value !== 'object') return '';
+
+  for (const [key, candidate] of Object.entries(value)) {
+    if (/^transaction[_-]?id$/i.test(key) && candidate != null) {
+      return String(candidate).trim();
+    }
+    const nestedId = getTransactionId(candidate);
+    if (nestedId) return nestedId;
+  }
+
+  return '';
+};
+
 const Login = ({ onLoginSuccess, dark }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -50,20 +64,17 @@ const Login = ({ onLoginSuccess, dark }) => {
     try {
       const response = await authService.login(username, password);
       const data = response.data;
+      const receivedTransactionId = getTransactionId(data);
 
       if (data?.token) {
         handleLoginSuccessMethod(data.token);
-      } else if (data?.transactionId) {
-        setTransactionId(data.transactionId);
+      } else if (receivedTransactionId) {
+        setTransactionId(receivedTransactionId);
         setOtpStep(true);
       } else if (data?.id_token) {
         handleLoginSuccessMethod(data.id_token);
-      } else if (data?.data?.transactionId) {
-        setTransactionId(data.data.transactionId);
-        setOtpStep(true);
       } else if (typeof data?.message === 'string' && data.message.toLowerCase().includes('otp')) {
-        setTransactionId('');
-        setOtpStep(true);
+        setErrorMsg('Login did not return a transaction ID. Please try again.');
       } else {
         setErrorMsg('Login failed. Invalid response format.');
       }
@@ -80,6 +91,11 @@ const Login = ({ onLoginSuccess, dark }) => {
     e.preventDefault();
     if (!otp) {
       setErrorMsg('OTP is required.');
+      return;
+    }
+    if (!transactionId) {
+      setErrorMsg('Your login session expired. Please sign in again.');
+      setOtpStep(false);
       return;
     }
 
