@@ -6,14 +6,16 @@ function upstreamUrl(request) {
 }
 
 function proxyHeaders(request) {
-  const headers = new Headers(request.headers);
+  const headers = new Headers();
   headers.set("host", "kiet.cybervidya.net");
   headers.set("origin", API_ORIGIN);
   headers.set("referer", `${API_ORIGIN}/`);
-  headers.delete("cf-connecting-ip");
-  headers.delete("cf-ipcountry");
-  headers.delete("cf-ray");
-  headers.delete("cf-visitor");
+
+  for (const headerName of ["content-type", "accept", "user-agent", "cookie", "authorization", "uid"]) {
+    const value = request.headers.get(headerName);
+    if (value) headers.set(headerName, value);
+  }
+
   return headers;
 }
 
@@ -39,12 +41,23 @@ export default {
     const requestUrl = new URL(request.url);
 
     if (requestUrl.pathname.startsWith("/api/")) {
+      let bodyText;
+      const hasBody = request.method !== "GET" && request.method !== "HEAD" && request.body;
+
+      if (hasBody) {
+        bodyText = await request.clone().text();
+      }
+
+      const headers = proxyHeaders(request);
+      if (bodyText !== undefined) {
+        headers.set("content-length", new TextEncoder().encode(bodyText).length.toString());
+      }
+
       const response = await fetch(upstreamUrl(request), {
         method: request.method,
-        headers: proxyHeaders(request),
-        body: request.method === "GET" || request.method === "HEAD" ? undefined : request.body,
-        redirect: "manual",
-        credentials: "include"
+        headers,
+        body: bodyText,
+        redirect: "manual"
       });
 
       return rewriteCookies(response);
