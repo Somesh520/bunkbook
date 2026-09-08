@@ -1,9 +1,11 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "bunkbook",
+  "main": "worker.js",
   "compatibility_date": "2026-09-07",
   "assets": {
     "directory": "build",
+    "binding": "ASSETS",
     "not_found_handling": "single-page-application"
   }
 }
