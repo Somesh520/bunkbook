@@ -4,6 +4,13 @@ import { Lock, User, KeyRound, AlertCircle, Loader2, Eye, EyeOff, ArrowRight } f
 import BunkbookLogo from '../assets/logos.png';
 
 const getTransactionId = (value) => {
+  if (typeof value === 'string') {
+    try {
+      return getTransactionId(JSON.parse(value));
+    } catch {
+      return '';
+    }
+  }
   if (!value || typeof value !== 'object') return '';
 
   for (const [key, candidate] of Object.entries(value)) {

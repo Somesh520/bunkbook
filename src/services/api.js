@@ -62,7 +62,13 @@ export const authService = {
   },
 
   verifyOtp: async (otp, transactionId) => {
-    const payload = { otp, transactionId, device: "WEB", version: null };
+    const payload = {
+      otp,
+      transactionId,
+      transactionID: transactionId,
+      device: "WEB",
+      version: null
+    };
     const headers = {
       'Accept': 'application/json, text/plain, */*',
       'Content-Type': 'application/json',
