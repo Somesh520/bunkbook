@@ -6,42 +6,31 @@ const teamMembers = [
     name: 'Somesh Tiwari',
     role: 'Lead Developer',
     linkedinUrl: 'https://www.linkedin.com/in/somesh-tiwari-236555322/',
-    imageUrl: 'https://api.dicebear.com/9.x/adventurer/png?seed=Somesh&backgroundColor=b6e3f4'
+    imageUrl: 'https://unavatar.io/linkedin/somesh-tiwari-236555322'
   },
   {
     name: 'Aviral Rajput',
     role: 'UI/UX Designer',
     linkedinUrl: 'https://www.linkedin.com/in/aviral-rajput-077a37309/',
-    imageUrl: 'https://api.dicebear.com/9.x/adventurer/png?seed=Aviral&backgroundColor=c0aede'
+    imageUrl: 'https://unavatar.io/linkedin/aviral-rajput-077a37309'
   },
   {
     name: 'Sujal Kumar',
     role: 'Contributor',
     linkedinUrl: 'https://www.linkedin.com/in/sujal-kumar-8a31bb320/',
-    imageUrl: 'https://api.dicebear.com/9.x/adventurer/png?seed=Sujal&backgroundColor=d1d4f9'
+    imageUrl: 'https://unavatar.io/linkedin/sujal-kumar-8a31bb320'
   },
   {
     name: 'Pushkar Garg',
     role: 'Contributor',
     linkedinUrl: 'https://www.linkedin.com/in/pushkar-garg-836542328/',
-    imageUrl: 'https://api.dicebear.com/9.x/adventurer/png?seed=Pushkar&backgroundColor=ffdfbf'
+    imageUrl: 'https://unavatar.io/linkedin/pushkar-garg-836542328'
   },
 ];
 
 const About = ({ profile }) => {
   return (
     <div className="max-w-3xl mx-auto space-y-8 animate-fade-in-up">
-      {/* Header Banner */}
-      <div className="relative bg-blue-600 rounded-2xl overflow-hidden shadow-lg">
-        <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-500 rounded-full opacity-50"></div>
-        <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-blue-400 rounded-full opacity-50"></div>
-
-        <div className="relative z-10 px-8 py-12 text-center sm:text-left">
-          <h1 className="text-4xl font-extrabold text-white tracking-tight mb-2">About App</h1>
-          <p className="text-lg text-blue-100 font-medium">Built for Students, by Students.</p>
-        </div>
-      </div>
-
       {/* Mobile App Promotion */}
       <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl shadow-lg overflow-hidden relative">
         <div className="px-6 py-8 sm:p-10 flex flex-col sm:flex-row items-center justify-between">
@@ -71,6 +60,23 @@ const About = ({ profile }) => {
         </div>
       </div>
 
+      {/* Suggestion Form Link */}
+      <div className="flex flex-col gap-5 rounded-2xl border border-blue-200 bg-blue-50 p-6 shadow-sm dark:border-blue-900/50 dark:bg-blue-950/30 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Have a suggestion?</h2>
+          <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">Tell us how we can make BunkBook better for you.</p>
+        </div>
+        <a
+          href="https://forms.gle/8Lw8L81YCt77bLKUA"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-blue-700"
+        >
+          Open Google Form
+          <ArrowRight className="ml-2 h-4 w-4" />
+        </a>
+      </div>
+
       {/* Creators Section */}
       <div>
         <h2 className="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-4 ml-2">The Creators</h2>
@@ -89,6 +95,9 @@ const About = ({ profile }) => {
                     src={member.imageUrl}
                     alt={member.name}
                     className="w-12 h-12 rounded-full mr-5 bg-gray-100 dark:bg-gray-700 object-cover"
+                    onError={(event) => {
+                      event.currentTarget.style.display = 'none';
+                    }}
                   />
                 ) : (
                   <div className="w-12 h-12 rounded-full mr-5 bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-400">
@@ -127,7 +136,6 @@ const About = ({ profile }) => {
           </div>
         </div>
       </div>
-
 
     </div>
   );

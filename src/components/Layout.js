@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, LogOut, Sun, Moon, LayoutDashboard, FileText, FileBadge, Plane, Smartphone, CalendarDays } from 'lucide-react';
+import { User, LogOut, Sun, Moon, LayoutDashboard, FileText, FileBadge, Plane, Smartphone, CalendarDays, Code2 } from 'lucide-react';
 import BunkbookLogo from '../assets/logos.png';
 
 const Layout = ({ children, onLogout, dark, setDark, currentTab, setCurrentTab, profile }) => {
@@ -24,7 +24,7 @@ const Layout = ({ children, onLogout, dark, setDark, currentTab, setCurrentTab, 
               <div className="mr-3 transition-transform group-hover:scale-105">
                 <img src={BunkbookLogo} alt="Bunkbook Logo" className="h-8 w-8 object-contain rounded-xl shadow-sm" />
               </div>
-              <span className="font-bold text-xl text-gray-900 dark:text-white tracking-tight truncate">Bunkbook <span className="text-sm font-medium text-gray-500">for KIET</span></span>
+              <span className="min-w-0 truncate font-bold text-xl text-gray-900 dark:text-white tracking-tight">Bunkbook <span className="hidden text-sm font-medium text-gray-500 sm:inline">for KIET</span></span>
             </div>
 
             {/* Right actions */}
@@ -33,9 +33,20 @@ const Layout = ({ children, onLogout, dark, setDark, currentTab, setCurrentTab, 
                 href="https://github.com/Somesh520/Kietkt/releases/download/v1.1.6/BunkBook.apk"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hidden sm:inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-full text-blue-700 dark:text-blue-300 bg-blue-100/50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 focus:outline-none transition-all active:scale-95"
+                aria-label="Download the BunkBook app"
+                className="inline-flex items-center px-2 py-1.5 sm:px-3 border border-transparent text-xs sm:text-sm font-medium rounded-full text-blue-700 dark:text-blue-300 bg-blue-100/50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 focus:outline-none transition-all active:scale-95"
               >
-                <Smartphone className="h-4 w-4 mr-1.5" /> <span>Get App</span>
+                <Smartphone className="h-4 w-4 sm:mr-1.5" /> <span className="hidden sm:inline">Get App</span>
+              </a>
+
+              <a
+                href="https://github.com/Somesh520/Kietkt"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Star the BunkBook repository"
+                className="inline-flex items-center px-2 py-1.5 sm:px-3 text-xs sm:text-sm font-medium rounded-full text-gray-700 dark:text-slate-300 bg-gray-100/80 dark:bg-slate-800/80 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-200 dark:hover:bg-slate-700 transition-all"
+              >
+                <Code2 className="h-4 w-4 sm:mr-1.5" /> <span className="hidden sm:inline">Star Repo</span>
               </a>
 
               <button
@@ -96,18 +107,20 @@ const Layout = ({ children, onLogout, dark, setDark, currentTab, setCurrentTab, 
       </main>
 
       {/* Footer */}
-      <footer className={`py-6 text-center text-sm font-medium transition-colors duration-300 ${dark ? 'text-slate-500' : 'text-gray-500'}`}>
-        <p>
-          Made with ❤️ by{' '}
-          <a
-            href="https://instagram.com/someshxd"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 dark:text-blue-400 hover:underline hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
-          >
-            @someshxd
-          </a>
-        </p>
+      <footer className={`mt-auto border-t transition-colors duration-300 ${dark ? 'border-slate-800 bg-slate-950/40' : 'border-gray-200 bg-white/60'}`}>
+        <div className="mx-auto flex max-w-7xl items-center justify-center px-4 py-7 sm:px-6 lg:px-8">
+          <p className={`text-sm font-medium ${dark ? 'text-slate-400' : 'text-gray-500'}`}>
+            Made with <span className="text-red-500">❤️</span> by{' '}
+            <a
+              href="https://instagram.com/someshxd"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-blue-600 transition-colors hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
+            >
+              @someshxd
+            </a>
+          </p>
+        </div>
       </footer>
     </div>
   );
