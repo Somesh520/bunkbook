@@ -351,34 +351,34 @@ const TripSimulator = () => {
             const isWarning = result.projectedPerc >= 75 && result.projectedPerc < 80;
 
             return (
-              <div key={idx} className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-slate-700/50 transition-all hover:shadow-md">
-                <div className="flex justify-between items-start mb-4">
-                  <div className="flex-1 pr-4">
+              <div key={idx} className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-slate-700/50 transition-all hover:shadow-md overflow-hidden">
+                <div className="flex flex-col gap-3 mb-4 sm:flex-row sm:justify-between sm:items-start">
+                  <div className="min-w-0 flex-1 sm:pr-4">
                     <span className="text-xs font-bold text-gray-500 dark:text-gray-400">{result.courseCode}</span>
-                    <h4 className="font-bold text-gray-900 dark:text-white truncate">{result.courseName}</h4>
+                    <h4 className="font-bold text-gray-900 dark:text-white break-words">{result.courseName}</h4>
                   </div>
                   {result.missedCount > 0 ? (
-                    <span className="px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-bold rounded-full">
+                    <span className="self-start max-w-full shrink-0 whitespace-normal px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-bold rounded-full">
                       -{result.missedCount} Classes
                     </span>
                   ) : (
-                    <span className="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 text-xs font-bold rounded-full">
+                    <span className="self-start max-w-full shrink-0 whitespace-normal px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 text-xs font-bold rounded-full">
                       0 Missed
                     </span>
                   )}
                 </div>
 
-                <div className="flex items-center justify-between py-3 border-t border-gray-50 dark:border-slate-700/50">
-                  <div className="flex-1">
+                <div className="flex flex-col gap-4 py-3 border-t border-gray-50 dark:border-slate-700/50 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
+                  <div className="min-w-0 flex-1">
                     <div className="text-[11px] text-gray-500 dark:text-gray-400 mb-1">Current</div>
                     <div className="font-semibold text-gray-900 dark:text-white">
                       {result.currentPresent}/{result.currentTotal} ({result.currentPerc.toFixed(1)}%)
                     </div>
                   </div>
                   
-                  <ArrowRight className="w-4 h-4 text-gray-300 dark:text-slate-600 mx-4" />
+                  <ArrowRight className="hidden w-4 h-4 text-gray-300 dark:text-slate-600 mx-4 sm:block" />
                   
-                  <div className="flex-1 text-right">
+                  <div className="min-w-0 flex-1 text-left sm:text-right">
                     <div className="text-[11px] text-gray-500 dark:text-gray-400 mb-1">Projected</div>
                     <div className={`font-bold ${isDanger ? 'text-red-500' : isWarning ? 'text-amber-500' : 'text-green-500'}`}>
                       {result.currentPresent}/{result.projectedTotal} ({result.projectedPerc.toFixed(1)}%)

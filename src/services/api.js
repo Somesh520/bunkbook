@@ -36,8 +36,9 @@ apiClient.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401 || error.response?.status === 403) {
-            // Optional: Handle token refresh or logout here
             console.error("Authentication failed. Session may have expired.");
+            localStorage.removeItem(AUTH_TOKEN_KEY);
+            window.dispatchEvent(new Event('session-expired'));
         }
         return Promise.reject(error);
     }

@@ -39,6 +39,16 @@ function App() {
   }, []);
 
   useEffect(() => {
+    const handleSessionExpired = () => {
+      setIsAuthenticated(false);
+      setCurrentView('login');
+    };
+
+    window.addEventListener('session-expired', handleSessionExpired);
+    return () => window.removeEventListener('session-expired', handleSessionExpired);
+  }, []);
+
+  useEffect(() => {
     if (dark) {
       document.documentElement.classList.add("dark");
     } else {
