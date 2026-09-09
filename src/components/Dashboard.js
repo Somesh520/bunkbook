@@ -6,8 +6,96 @@ import ExamSection from './ExamSection';
 import HallTicket from './HallTicket';
 import About from './About';
 import TripSimulator from './TripSimulator';
+import Schedule from './Schedule';
 
-const AttendanceView = ({ attendance, courses, openCourseDetails, profile }) => {
+const parseScheduleDate = (dateString) => {
+  if (!dateString) return null;
+
+  const [datePart, timePart = '00:00:00'] = dateString.split(' ');
+  const dateParts = datePart.split(/[/-]/).map(Number);
+  let date;
+
+  if (dateParts.length === 3) {
+    const [first, second, third] = dateParts;
+    const isYearFirst = String(first).length === 4;
+    date = isYearFirst
+      ? new Date(first, second - 1, third)
+      : new Date(third, second - 1, first);
+    const [hours, minutes, seconds = 0] = timePart.split(':').map(Number);
+    date.setHours(hours || 0, minutes || 0, seconds || 0, 0);
+  } else {
+    date = new Date(dateString);
+  }
+
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
+const isToday = (date) => {
+  const today = new Date();
+  return date && date.getFullYear() === today.getFullYear() &&
+    date.getMonth() === today.getMonth() && date.getDate() === today.getDate();
+};
+
+const getTodayAttendanceStatuses = async (courses) => {
+  const statuses = {};
+
+  try {
+    const schedule = await dataService.getWeeklySchedule();
+    const todayClasses = schedule.filter((event) => {
+      const start = parseScheduleDate(event.start);
+      return isToday(start) && event.type !== 'HOLIDAY' && event.courseCode;
+    });
+
+    await Promise.all(courses.map(async (course) => {
+      const courseCode = course.courseCode?.trim().toUpperCase();
+      const courseName = course.courseName?.toLowerCase() || '';
+      const courseIsTheory = !/(lab|practical|project)/i.test(courseName);
+      const scheduledClasses = todayClasses.filter((event) => {
+        const eventName = event.courseName?.toLowerCase() || '';
+        const eventIsTheory = !/(lab|practical|project)/i.test(eventName);
+        return event.courseCode?.trim().toUpperCase() === courseCode && eventIsTheory === courseIsTheory;
+      });
+
+      if (scheduledClasses.length === 0) return;
+
+      const hasUpcomingClass = scheduledClasses.some((scheduledClass) => {
+        const endTime = parseScheduleDate(scheduledClass.end) || (() => {
+          const startTime = parseScheduleDate(scheduledClass.start);
+          return startTime ? new Date(startTime.getTime() + 60 * 60 * 1000) : null;
+        })();
+        return endTime && new Date() < endTime;
+      });
+
+      if (hasUpcomingClass) {
+        statuses[course.courseId] = 'SCHEDULED';
+        return;
+      }
+
+      const components = course.studentCourseCompDetails || [];
+      for (const component of components) {
+        const lectures = await dataService.getLectureWiseAttendance(
+          course.studentId,
+          course.courseId,
+          component.courseCompId
+        );
+        const todayRecord = lectures.find((lecture) => isToday(parseScheduleDate(lecture.planLecDate)));
+        const attendance = todayRecord?.attendance?.toUpperCase();
+        if (attendance === 'PRESENT' || attendance === 'ABSENT') {
+          statuses[course.courseId] = attendance;
+          return;
+        }
+      }
+
+      statuses[course.courseId] = 'PENDING';
+    }));
+  } catch (error) {
+    console.error('Failed to fetch today attendance statuses:', error);
+  }
+
+  return statuses;
+};
+
+const AttendanceView = ({ attendance, courses, openCourseDetails, profile, todayStatuses }) => {
   const [photoUrl, setPhotoUrl] = React.useState(null);
   const [imgError, setImgError] = React.useState(false);
 
@@ -145,6 +233,7 @@ const AttendanceView = ({ attendance, courses, openCourseDetails, profile }) => 
 
           const percentage = totalLectures > 0 ? ((presentLectures / totalLectures) * 100) : 0;
           const isDanger = percentage < 75;
+          const todayStatus = todayStatuses[course.courseId];
 
           let bunkStatus = null;
           if (totalLectures > 0) {
@@ -177,6 +266,18 @@ const AttendanceView = ({ attendance, courses, openCourseDetails, profile }) => 
                     {course.courseName}
                   </h3>
                 </div>
+                {todayStatus && (
+                  <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold ${
+                    todayStatus === 'PRESENT' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                    todayStatus === 'ABSENT' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
+                    todayStatus === 'SCHEDULED' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' :
+                    'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+                  }`}>
+                    {todayStatus === 'PRESENT' ? 'Present Today' :
+                      todayStatus === 'ABSENT' ? 'Absent Today' :
+                      todayStatus === 'SCHEDULED' ? 'Upcoming' : 'Not Marked Yet'}
+                  </span>
+                )}
               </div>
 
               <div className="space-y-5">
@@ -217,6 +318,7 @@ const Dashboard = ({ onLogout, dark, setDark }) => {
   const [attendance, setAttendance] = useState(null);
   const [courses, setCourses] = useState([]);
   const [profile, setProfile] = useState(null);
+  const [todayStatuses, setTodayStatuses] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
   // Modal State for Attendance
@@ -237,6 +339,7 @@ const Dashboard = ({ onLogout, dark, setDark }) => {
         if (dashAtt) setAttendance(dashAtt);
         if (regCourses) setCourses(regCourses);
         if (profileInfo) setProfile(profileInfo);
+        setTodayStatuses(await getTodayAttendanceStatuses(regCourses || []));
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       } finally {
@@ -317,10 +420,13 @@ const Dashboard = ({ onLogout, dark, setDark }) => {
           courses={courses} 
           openCourseDetails={openCourseDetails} 
           profile={profile}
+          todayStatuses={todayStatuses}
         />
       )}
       
       {currentTab === 'simulator' && <TripSimulator />}
+
+      {currentTab === 'schedule' && <Schedule dark={dark} />}
       
       {currentTab === 'exam' && <ExamSection dark={dark} />}
       

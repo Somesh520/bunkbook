@@ -152,12 +152,17 @@ const Login = ({ onLoginSuccess, dark }) => {
   };
 
   return (
+    
     <div className={`min-h-screen flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 font-sans ${dark ? 'bg-slate-900 text-white' : 'bg-gray-50 text-gray-900'} relative overflow-hidden`}>
 
       {/* Decorative blobs */}
       <div className={`absolute top-0 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-20 pointer-events-none transition-colors duration-700 ${dark ? 'bg-blue-600' : 'bg-blue-300'}`}></div>
       <div className={`absolute bottom-0 right-1/4 w-96 h-96 rounded-full blur-3xl opacity-20 pointer-events-none transition-colors duration-700 ${dark ? 'bg-purple-600' : 'bg-purple-300'}`}></div>
-
+      <div><header className="py-4 text-center text-sm font-large text-blue-700 dark:text-blue-400">
+        Download Our Native app for speed and convenience <a href="https://github.com/Somesh520/Kietkt/releases/tag/v1.1.6" target="_blank" rel="noopener noreferrer" className="text-red-500 dark:text-red-400 hover:underline">
+          Download Now
+        </a>
+      </header></div>
       <div className="w-full max-w-md mx-auto relative z-10 animate-fade-in-up">
         <div className="flex justify-center mb-6">
           <div className="p-3 bg-white/10 dark:bg-slate-800/50 backdrop-blur-xl rounded-2xl shadow-xl shadow-blue-500/10 border border-white/20 dark:border-slate-700/50 transform hover:scale-105 transition-transform duration-300">
@@ -188,7 +193,7 @@ const Login = ({ onLoginSuccess, dark }) => {
               <>
                 <div className="space-y-1">
                   <label htmlFor="username" className={`block text-sm font-bold ml-1 ${dark ? 'text-slate-300' : 'text-gray-700'}`}>
-                    Username
+                    Cybervidhya Credentials (202X....)
                   </label>
                   <div className="relative group">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-blue-500 text-gray-400">

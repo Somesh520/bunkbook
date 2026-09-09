@@ -4,19 +4,25 @@ import { Plane, AlertTriangle, AlertCircle, CheckCircle, ArrowRight } from 'luci
 
 const parseCustomDate = (dateString) => {
   if (!dateString) throw new Error("No date provided");
-  
-  // Try standard parsing first (handles ISO strings)
+
+  const [datePart, timePart = "00:00:00"] = dateString.split(' ');
+  const dateParts = datePart.split('/');
+  if (dateParts.length === 3) {
+    const [day, month, year] = dateParts;
+    const [hours, minutes, seconds = 0] = timePart.split(':');
+    const customDate = new Date(
+      Number(year),
+      Number(month) - 1,
+      Number(day),
+      Number(hours),
+      Number(minutes),
+      Number(seconds)
+    );
+    if (!isNaN(customDate.getTime())) return customDate;
+  }
+
   const standardDate = new Date(dateString);
   if (!isNaN(standardDate.getTime())) return standardDate;
-  
-  // Try custom DD/MM/YYYY HH:MM:SS format
-  const parts = dateString.split(' ');
-  if (parts.length >= 1) {
-    const [day, month, year] = parts[0].split('/');
-    const timeParts = (parts[1] || "00:00:00").split(':');
-    const d = new Date(Number(year), Number(month) - 1, Number(day), Number(timeParts[0]), Number(timeParts[1]), Number(timeParts[2] || 0));
-    if (!isNaN(d.getTime())) return d;
-  }
   
   throw new Error("Invalid date format");
 };
@@ -46,6 +52,13 @@ const isBetweenDays = (d, start, end) => {
   return d > start && d < end;
 };
 
+const getDateKey = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 const TripSimulator = () => {
   const [loading, setLoading] = useState(true);
   const [timetable, setTimetable] = useState([]);
@@ -59,8 +72,10 @@ const TripSimulator = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const sched = await dataService.getWeeklySchedule();
-        const rCourses = await dataService.getRegisteredCourses();
+        const [sched, rCourses] = await Promise.all([
+          dataService.getWeeklySchedule(),
+          dataService.getRegisteredCourses(),
+        ]);
         setTimetable(sched || []);
         setCourses(rCourses || []);
       } catch (err) {
@@ -101,11 +116,11 @@ const TripSimulator = () => {
       if (event.courseCode) {
         try {
           const date = parseCustomDate(event.start);
-          const dayOfWeek = date.getDay();
-          if (!map[dayOfWeek]) map[dayOfWeek] = {};
+          const dateKey = getDateKey(date);
+          if (!map[dateKey]) map[dateKey] = {};
           
           const code = event.courseCode.trim().toUpperCase();
-          map[dayOfWeek][code] = (map[dayOfWeek][code] || 0) + 1;
+          map[dateKey][code] = (map[dateKey][code] || 0) + 1;
         } catch (e) {}
       }
     });
@@ -122,8 +137,7 @@ const TripSimulator = () => {
     const end = selectedEnd ? new Date(selectedEnd) : new Date(selectedStart);
 
     while (current <= end) {
-      const dayOfWeek = current.getDay();
-      const daySchedule = map[dayOfWeek];
+      const daySchedule = map[getDateKey(current)];
       if (daySchedule) {
         Object.keys(daySchedule).forEach((code) => {
           missed[code] = (missed[code] || 0) + daySchedule[code];
@@ -143,7 +157,9 @@ const TripSimulator = () => {
       if (missedCount === 0 && course.courseName) {
         const namePart = course.courseName.toLowerCase();
         Object.keys(missed).forEach((mCode) => {
-          const matchingEvent = timetable.find(e => e.courseCode === mCode);
+          const matchingEvent = timetable.find(
+            (event) => event.courseCode?.trim().toUpperCase() === mCode
+          );
           if (matchingEvent && matchingEvent.courseName && namePart.includes(matchingEvent.courseName.toLowerCase())) {
             missedCount = missed[mCode];
           }
