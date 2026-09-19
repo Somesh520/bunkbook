@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, LogOut, Sun, Moon, LayoutDashboard, FileText, FileBadge, Plane, Smartphone, CalendarDays, Code2 } from 'lucide-react';
+import { User, LogOut, LayoutDashboard, FileText, FileBadge, Plane, Smartphone, CalendarDays, Code2 } from 'lucide-react';
 import BunkbookLogo from '../assets/logos.png';
 import { ThemeToggle } from './ThemeToggle';
 
