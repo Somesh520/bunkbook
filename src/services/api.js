@@ -186,10 +186,29 @@ export const dataService = {
   getHallTicketOptions: async (sessionId) => {
     try {
       const response = await apiClient.get(`/exam/hall-ticket/student/download/options/${sessionId}`);
-      return response.data?.data || [];
+      const rawData = response.data;
+      
+      const data = rawData?.data || rawData;
+      
+      if (Array.isArray(data)) {
+        return data;
+      }
+      
+      // If data is an object but not an array, search for an array inside it
+      if (rawData && typeof rawData === 'object') {
+        for (const key of Object.keys(rawData)) {
+           if (Array.isArray(rawData[key])) {
+             return rawData[key];
+           }
+        }
+        // If no array found, throw an error to show the payload in the UI
+        throw new Error(`API returned non-array: ${JSON.stringify(rawData).substring(0, 100)}`);
+      }
+      
+      return [];
     } catch (err) {
       console.error('Failed to fetch hall ticket options:', err);
-      return [];
+      throw err;
     }
   },
 

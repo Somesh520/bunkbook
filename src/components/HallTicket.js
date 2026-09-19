@@ -17,26 +17,36 @@ const HallTicket = ({ profile }) => {
 
   // 1. Fetch sessions on mount
   useEffect(() => {
+    console.log("[HallTicket] Fetch sessions effect started. profile:", profile);
     const fetchSessions = async () => {
       setIsLoadingSessions(true);
       setError('');
       try {
-        // Fallback to studentId 1 if profile doesn't have it directly exposed
-        // Real implementation should ensure studentId is available.
-        const sId = profile?.studentId || localStorage.getItem('studentId'); 
+        // Fallback to profile.id or localStorage if profile.studentId is undefined
+        const sId = profile?.studentId || profile?.id || localStorage.getItem('studentId'); 
+        console.log("[HallTicket] Fetching sessions for studentId:", sId);
         
         if (sId) {
             const data = await dataService.getExamSession(sId);
+            console.log("[HallTicket] getExamSession returned:", data);
+            setSessions(data || []);
+            if (data && data.length > 0) {
+              console.log("[HallTicket] Setting selectedSessionId to:", data[0].sessionId.toString());
+              setSelectedSessionId(data[0].sessionId.toString());
+            } else {
+              console.log("[HallTicket] No sessions returned.");
+            }
+        } else {
+            console.log("[HallTicket] No sId found. Using fallback 1.");
+            const data = await dataService.getExamSession(1); // placeholder
+            console.log("[HallTicket] Fallback getExamSession returned:", data);
             setSessions(data || []);
             if (data && data.length > 0) {
               setSelectedSessionId(data[0].sessionId.toString());
             }
-        } else {
-            // Attempt generic fetch if studentId missing
-            const data = await dataService.getExamSession(1); // placeholder
-            setSessions(data || []);
         }
       } catch (err) {
+        console.error("[HallTicket] Failed to load exam sessions:", err);
         setError('Failed to load exam sessions.');
       } finally {
         setIsLoadingSessions(false);
@@ -47,23 +57,31 @@ const HallTicket = ({ profile }) => {
 
   // 2. Fetch options when session changes
   useEffect(() => {
+    console.log("[HallTicket] Options effect triggered. selectedSessionId:", selectedSessionId);
     if (!selectedSessionId) {
+      console.log("[HallTicket] selectedSessionId is falsy, setting options to []");
       setOptions([]);
       return;
     }
     
     const fetchOptions = async () => {
+      console.log("[HallTicket] Fetching options for sessionId:", selectedSessionId);
       setIsLoadingOptions(true);
+      setError(''); // Clear previous errors
       try {
         const data = await dataService.getHallTicketOptions(selectedSessionId);
+        console.log("[HallTicket] getHallTicketOptions returned:", data);
         setOptions(data || []);
         if (data && data.length > 0) {
-          setSelectedOptionId(data[0].id.toString());
+          const firstId = data[0].id || data[0].hallTicketId || data[0].optionId;
+          setSelectedOptionId(firstId ? firstId.toString() : '');
         } else {
             setSelectedOptionId('');
         }
       } catch (err) {
+        console.error("[HallTicket] Error in fetchOptions:", err);
         setOptions([]);
+        setError(`Failed to fetch options: ${err.message || 'Unknown error'}`);
       } finally {
         setIsLoadingOptions(false);
       }
@@ -83,8 +101,11 @@ const HallTicket = ({ profile }) => {
     setSuccess('');
     
     try {
-      const selectedOption = options.find(o => o.id.toString() === selectedOptionId);
-      const title = selectedOption ? selectedOption.title : 'Hall_Ticket';
+      const selectedOption = options.find(o => {
+        const val = o.id || o.hallTicketId || o.optionId;
+        return val?.toString() === selectedOptionId;
+      });
+      const title = selectedOption ? (selectedOption.title || selectedOption.name || selectedOption.hallTicketName || 'Hall_Ticket') : 'Hall_Ticket';
       
       await dataService.downloadHallTicketPDF(selectedOptionId, title);
       setSuccess("Hall ticket downloaded successfully!");
@@ -171,9 +192,13 @@ const HallTicket = ({ profile }) => {
                   {options.length === 0 ? (
                     <option value="">No options available</option>
                   ) : (
-                    options.map(o => (
-                      <option key={o.id} value={o.id}>{o.title}</option>
-                    ))
+                    options.map((o, idx) => {
+                      const val = o.id || o.hallTicketId || o.optionId || idx;
+                      const label = o.title || o.name || o.hallTicketName || `Option ${idx + 1}`;
+                      return (
+                        <option key={val} value={val}>{label}</option>
+                      );
+                    })
                   )}
                 </select>
               </div>
