@@ -1,6 +1,7 @@
 import React from 'react';
 import { User, LogOut, Sun, Moon, LayoutDashboard, FileText, FileBadge, Plane, Smartphone, CalendarDays, Code2 } from 'lucide-react';
 import BunkbookLogo from '../assets/logos.png';
+import { ThemeToggle } from './ThemeToggle';
 
 const Layout = ({ children, onLogout, dark, setDark, currentTab, setCurrentTab, profile }) => {
   const navItems = [
@@ -49,13 +50,11 @@ const Layout = ({ children, onLogout, dark, setDark, currentTab, setCurrentTab, 
                 <Code2 className="h-4 w-4 sm:mr-1.5" /> <span className="hidden sm:inline">Star Repo</span>
               </a>
 
-              <button
-                onClick={() => setDark(!dark)}
-                className="p-2 rounded-full bg-gray-100/80 dark:bg-slate-800/80 text-gray-500 dark:text-yellow-400 hover:bg-gray-200 dark:hover:bg-slate-700 transition-all active:scale-95"
-                aria-label="Toggle Dark Mode"
-              >
-                {dark ? <Sun className="h-4 w-4 sm:h-5 sm:w-5" /> : <Moon className="h-4 w-4 sm:h-5 sm:w-5" />}
-              </button>
+              <ThemeToggle 
+                isDark={dark} 
+                onToggle={() => setDark(!dark)} 
+                className="w-8 h-8 sm:w-10 sm:h-10" 
+              />
 
               {profile && (
                 <div className="hidden sm:flex items-center text-sm font-medium text-gray-700 dark:text-slate-300 bg-gray-100/50 dark:bg-slate-800/50 px-3 py-1.5 rounded-full border border-gray-200 dark:border-slate-700">
