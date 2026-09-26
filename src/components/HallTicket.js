@@ -7,46 +7,37 @@ const HallTicket = ({ profile }) => {
   const [selectedSessionId, setSelectedSessionId] = useState('');
   const [options, setOptions] = useState([]);
   const [selectedOptionId, setSelectedOptionId] = useState('');
-  
+
   const [isLoadingSessions, setIsLoadingSessions] = useState(true);
   const [isLoadingOptions, setIsLoadingOptions] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
-  
+
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
   // 1. Fetch sessions on mount
   useEffect(() => {
-    console.log("[HallTicket] Fetch sessions effect started. profile:", profile);
     const fetchSessions = async () => {
       setIsLoadingSessions(true);
       setError('');
       try {
-        // Fallback to profile.id or localStorage if profile.studentId is undefined
-        const sId = profile?.studentId || profile?.id || localStorage.getItem('studentId'); 
-        console.log("[HallTicket] Fetching sessions for studentId:", sId);
-        
+        // Fallback to studentId 1 if profile doesn't have it directly exposed
+        // Real implementation should ensure studentId is available.
+        const sId = profile?.studentId || localStorage.getItem('studentId');
+        console.log(sId)
+
         if (sId) {
-            const data = await dataService.getExamSession(sId);
-            console.log("[HallTicket] getExamSession returned:", data);
-            setSessions(data || []);
-            if (data && data.length > 0) {
-              console.log("[HallTicket] Setting selectedSessionId to:", data[0].sessionId.toString());
-              setSelectedSessionId(data[0].sessionId.toString());
-            } else {
-              console.log("[HallTicket] No sessions returned.");
-            }
+          const data = await dataService.getExamSession(sId);
+          setSessions(data || []);
+          if (data && data.length > 0) {
+            setSelectedSessionId(data[0].sessionId.toString());
+          }
         } else {
-            console.log("[HallTicket] No sId found. Using fallback 1.");
-            const data = await dataService.getExamSession(1); // placeholder
-            console.log("[HallTicket] Fallback getExamSession returned:", data);
-            setSessions(data || []);
-            if (data && data.length > 0) {
-              setSelectedSessionId(data[0].sessionId.toString());
-            }
+          // Attempt generic fetch if studentId missing
+          const data = await dataService.getExamSession(1); // placeholder
+          setSessions(data || []);
         }
       } catch (err) {
-        console.error("[HallTicket] Failed to load exam sessions:", err);
         setError('Failed to load exam sessions.');
       } finally {
         setIsLoadingSessions(false);
@@ -57,36 +48,32 @@ const HallTicket = ({ profile }) => {
 
   // 2. Fetch options when session changes
   useEffect(() => {
-    console.log("[HallTicket] Options effect triggered. selectedSessionId:", selectedSessionId);
     if (!selectedSessionId) {
-      console.log("[HallTicket] selectedSessionId is falsy, setting options to []");
       setOptions([]);
       return;
     }
-    
+
     const fetchOptions = async () => {
-      console.log("[HallTicket] Fetching options for sessionId:", selectedSessionId);
       setIsLoadingOptions(true);
       setError(''); // Clear previous errors
       try {
         const data = await dataService.getHallTicketOptions(selectedSessionId);
-        console.log("[HallTicket] getHallTicketOptions returned:", data);
         setOptions(data || []);
         if (data && data.length > 0) {
+          // Attempt to find the correct ID field (could be id, hallTicketId, or optionId)
           const firstId = data[0].id || data[0].hallTicketId || data[0].optionId;
           setSelectedOptionId(firstId ? firstId.toString() : '');
         } else {
-            setSelectedOptionId('');
+          setSelectedOptionId('');
         }
       } catch (err) {
-        console.error("[HallTicket] Error in fetchOptions:", err);
         setOptions([]);
         setError(`Failed to fetch options: ${err.message || 'Unknown error'}`);
       } finally {
         setIsLoadingOptions(false);
       }
     };
-    
+
     fetchOptions();
   }, [selectedSessionId]);
 
@@ -95,21 +82,21 @@ const HallTicket = ({ profile }) => {
       setError("Please select a hall ticket option.");
       return;
     }
-    
+
     setIsDownloading(true);
     setError('');
     setSuccess('');
-    
+
     try {
       const selectedOption = options.find(o => {
         const val = o.id || o.hallTicketId || o.optionId;
         return val?.toString() === selectedOptionId;
       });
       const title = selectedOption ? (selectedOption.title || selectedOption.name || selectedOption.hallTicketName || 'Hall_Ticket') : 'Hall_Ticket';
-      
+
       await dataService.downloadHallTicketPDF(selectedOptionId, title);
       setSuccess("Hall ticket downloaded successfully!");
-      
+
       // clear success message after 3 seconds
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
@@ -121,9 +108,9 @@ const HallTicket = ({ profile }) => {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-        
-        <div className="px-6 py-5 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/80">
+      <div className="bg-white dark:bg-[#09090b] shadow-sm rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+
+        <div className="px-6 py-5 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-[#121214]">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center">
             <FileText className="h-5 w-5 mr-2 text-blue-600 dark:text-blue-400" />
             Download Hall Ticket
@@ -153,12 +140,12 @@ const HallTicket = ({ profile }) => {
               <Loader2 className="h-8 w-8 text-blue-600 dark:text-blue-400 animate-spin" />
             </div>
           ) : sessions.length === 0 ? (
-            <div className="text-center py-8 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg">
+            <div className="text-center py-8 border-2 border-dashed border-gray-300 dark:border-gray-800 rounded-lg">
               <p className="text-gray-500 dark:text-gray-400">No exam sessions currently available.</p>
             </div>
           ) : (
             <div className="space-y-5 max-w-md mx-auto">
-              
+
               {/* Session Dropdown */}
               <div>
                 <label htmlFor="session" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">

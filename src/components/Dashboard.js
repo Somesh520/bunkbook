@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { authService, dataService } from '../services/api';
-import { Activity, Loader2, X, Calendar, CheckCircle2, XCircle } from 'lucide-react';
+import { Activity, Loader2, X, Calendar, CheckCircle2, XCircle, FolderIcon } from 'lucide-react';
 import Layout from './Layout';
 import ExamSection from './ExamSection';
 import HallTicket from './HallTicket';
@@ -117,99 +117,81 @@ const AttendanceView = ({ attendance, courses, openCourseDetails, profile, today
 
   return (
     <div className="space-y-8 animate-fade-in-up">
-      {/* Profile Card */}
-      {profile && (
-        <div className="bg-[#1e293b] border border-slate-700/50 rounded-2xl p-4 flex items-center shadow-sm">
-          <div className="mr-4 flex-shrink-0 relative">
-             {photoUrl && !imgError ? (
-               <img 
-                 src={photoUrl} 
-                 alt="Profile" 
-                 className="w-14 h-14 rounded-full border-[3px] border-blue-500/80 object-cover" 
-                 onError={() => setImgError(true)}
-               />
-             ) : (
-               <div className="w-14 h-14 rounded-full bg-blue-900/50 flex items-center justify-center text-blue-400 text-xl font-bold border-[3px] border-blue-500/80">
-                 {profile.fullName?.charAt(0) || 'U'}
-               </div>
-             )}
-          </div>
-          <div>
-            <h3 className="text-lg font-bold text-white tracking-tight leading-none">{profile.fullName}</h3>
-            <div className="flex flex-col sm:flex-row sm:items-center mt-1.5 gap-1 sm:gap-2">
-              <p className="text-slate-400 text-sm font-medium">{profile.registrationNumber}</p>
-              {(() => {
-                const sem = profile.semester || profile.currentSemester || profile.studentPersonalInformation?.semester || profile.studentPersonalInformation?.currentSemester;
-                const year = profile.year || profile.currentYear || profile.studentPersonalInformation?.year || profile.studentPersonalInformation?.currentYear;
-                
-                const parts = [];
-                if (year) parts.push(`Year ${year}`);
-                if (sem) parts.push(`Sem ${sem}`);
-                
-                if (parts.length > 0) {
-                  return (
-                    <>
-                      <span className="hidden sm:inline text-slate-500 text-xs text-opacity-50">•</span>
-                      <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-300 border border-blue-500/20 w-fit">
-                        {parts.join(' • ')}
-                      </span>
-                    </>
-                  );
-                }
-                return null;
-              })()}
+      {/* Combined Profile & Attendance Card */}
+      <div className="bg-white dark:bg-[#09090b] border border-gray-200 dark:border-gray-800/80 rounded-3xl shadow-sm p-6 sm:p-8 relative overflow-hidden transition-colors">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-8">
+          {/* Profile Section */}
+          {profile && (
+            <div className="flex items-center">
+              <div className="mr-5 sm:mr-6 flex-shrink-0 relative">
+                 {photoUrl && !imgError ? (
+                   <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full ring-2 ring-blue-500 ring-offset-2 ring-offset-white dark:ring-offset-[#09090b]">
+                     <img 
+                       src={photoUrl} 
+                       alt="Profile" 
+                       className="w-full h-full rounded-full object-cover" 
+                       onError={() => setImgError(true)}
+                     />
+                   </div>
+                 ) : (
+                   <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full ring-2 ring-blue-500 ring-offset-2 ring-offset-white dark:ring-offset-[#09090b] bg-blue-900/50 flex items-center justify-center text-blue-400 text-3xl font-bold">
+                     {profile.fullName?.charAt(0) || 'U'}
+                   </div>
+                 )}
+              </div>
+              <div>
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white tracking-tight leading-none">{profile.fullName}</h3>
+                <div className="flex flex-col mt-2 gap-1.5">
+                  <p className="text-gray-500 dark:text-slate-400 text-sm font-medium">{profile.registrationNumber}</p>
+                  {(() => {
+                    const sem = profile.semester || profile.currentSemester || profile.studentPersonalInformation?.semester || profile.studentPersonalInformation?.currentSemester;
+                    const year = profile.year || profile.currentYear || profile.studentPersonalInformation?.year || profile.studentPersonalInformation?.currentYear;
+                    
+                    const parts = [];
+                    if (year) parts.push(`Year ${year}`);
+                    if (sem) parts.push(`Sem ${sem}`);
+                    
+                    if (parts.length > 0) {
+                      return (
+                        <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-300 border border-blue-200 dark:border-blue-500/20 w-fit">
+                          {parts.join(' • ')}
+                        </span>
+                      );
+                    }
+                    return null;
+                  })()}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          )}
 
-      {/* Overall Attendance Card - HERO */}
-      <div className="bg-white dark:bg-[#1e293b] border border-gray-200 dark:border-slate-700/50 rounded-3xl shadow-sm p-8 relative overflow-hidden transition-colors">
-        <h2 className="text-xl font-bold mb-8 flex items-center text-gray-900 dark:text-white">
-          <Activity className="h-6 w-6 mr-3 text-blue-500 dark:text-blue-400" /> Overall Attendance Overview
-        </h2>
-        
-        {attendance ? (
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-10">
-            <div className="flex items-center justify-center relative">
-              <svg className="w-36 h-36 transform -rotate-90">
-                <circle cx="72" cy="72" r="60" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-gray-100 dark:text-slate-700" />
-                <circle
-                  cx="72" cy="72" r="60" stroke="currentColor" strokeWidth="12" fill="transparent"
-                  strokeDasharray={377} strokeDashoffset={377 - (377 * presentPerc) / 100}
-                  className="text-blue-500 transition-all duration-1000 ease-out"
-                  strokeLinecap="round"
-                />
-              </svg>
-              <div className="absolute flex flex-col items-center justify-center text-center">
-                <span className="text-4xl font-extrabold tracking-tighter text-gray-900 dark:text-white">{presentPerc.toFixed(1)}%</span>
-              </div>
+          {/* Overall Attendance Circular Progress */}
+          {attendance ? (
+            <div className="flex flex-col items-center justify-center relative mt-2 sm:mt-0">
+               <div className="flex items-center justify-center relative">
+                  <svg className="w-32 h-32 sm:w-36 sm:h-36 transform -rotate-90" viewBox="0 0 144 144">
+                    <circle cx="72" cy="72" r="60" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-gray-100 dark:text-slate-800" />
+                    <circle
+                      cx="72" cy="72" r="60" stroke="currentColor" strokeWidth="12" fill="transparent"
+                      strokeDasharray={377} strokeDashoffset={377 - (377 * presentPerc) / 100}
+                      className="text-blue-500 transition-all duration-1000 ease-out"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <div className="absolute flex flex-col items-center justify-center text-center">
+                    <span className="text-3xl sm:text-4xl font-extrabold tracking-tighter text-gray-900 dark:text-white">{presentPerc.toFixed(1)}%</span>
+                  </div>
+               </div>
+               <p className="mt-3 text-sm font-semibold text-gray-500 dark:text-slate-400 flex items-center">
+                 <Activity className="h-4 w-4 mr-1.5 text-blue-500 dark:text-blue-400" /> Overall Attendance
+               </p>
             </div>
-            
-            <div className="flex-1 space-y-6 bg-gray-50 dark:bg-black/20 rounded-2xl p-6 border border-gray-100 dark:border-white/5">
-              <div>
-                <div className="flex justify-between text-sm font-semibold mb-2">
-                  <span className="text-gray-600 dark:text-gray-300">Present</span>
-                  <span className="text-gray-900 dark:text-white">{presentPerc.toFixed(1)}%</span>
-                </div>
-                <div className="h-3 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                  <div className="h-full bg-green-500 transition-all duration-1000" style={{ width: `${presentPerc}%` }} />
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-sm font-semibold mb-2">
-                  <span className="text-gray-600 dark:text-gray-300">Absent</span>
-                  <span className="text-gray-900 dark:text-white">{absentPerc.toFixed(1)}%</span>
-                </div>
-                <div className="h-3 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                  <div className="h-full bg-red-500 transition-all duration-1000" style={{ width: `${absentPerc}%` }} />
-                </div>
-              </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center w-full sm:w-auto">
+               <p className="text-sm text-gray-500 dark:text-slate-400">Attendance data not available.</p>
             </div>
-          </div>
-        ) : (
-          <p className="text-sm text-gray-500 dark:text-slate-400">Attendance data not available.</p>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Subjects Header */}
@@ -252,58 +234,59 @@ const AttendanceView = ({ attendance, courses, openCourseDetails, profile, today
             <div 
               key={idx} 
               onClick={() => openCourseDetails(course)}
-              className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl border border-gray-100 dark:border-slate-700/50 p-6 cursor-pointer relative overflow-hidden transition-all duration-300 transform hover:-translate-y-1 group"
+              className="flex flex-col gap-3 p-5 bg-white dark:bg-[#09090b] text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-800 rounded-xl shadow-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-[#121214] transition-colors group"
             >
-              {/* Top Accent Line */}
-              <div className={`absolute top-0 left-0 w-full h-1 transition-colors ${!isDanger ? 'bg-green-500' : 'bg-red-500'}`}></div>
-
-              <div className="flex justify-between items-start mb-6">
-                <div className="flex-1 pr-4">
-                  <span className="inline-block px-2.5 py-1 bg-gray-100 dark:bg-slate-700/50 text-gray-700 dark:text-slate-300 text-xs font-bold rounded-lg mb-3 tracking-wide transition-colors">
-                    {course.courseCode}
-                  </span>
-                  <h3 className="font-bold text-gray-900 dark:text-white text-base leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
-                    {course.courseName}
-                  </h3>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <FolderIcon className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" aria-hidden="true" />
+                  <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">{course.courseCode}</span>
                 </div>
                 {todayStatus && (
-                  <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold ${
-                    todayStatus === 'PRESENT' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
-                    todayStatus === 'ABSENT' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
-                    todayStatus === 'SCHEDULED' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' :
-                    'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+                  <span className={`px-2 py-0.5 text-[10px] font-semibold rounded-md border ${
+                    todayStatus === 'PRESENT' ? 'bg-green-100/50 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800/50' :
+                    todayStatus === 'ABSENT' ? 'bg-red-100/50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800/50' :
+                    todayStatus === 'SCHEDULED' ? 'bg-blue-100/50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800/50' :
+                    'bg-amber-100/50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800/50'
                   }`}>
                     {todayStatus === 'PRESENT' ? 'Present Today' :
                       todayStatus === 'ABSENT' ? 'Absent Today' :
-                      todayStatus === 'SCHEDULED' ? 'Upcoming' : 'Not Marked Yet'}
+                      todayStatus === 'SCHEDULED' ? 'Upcoming' : 'No Data'}
                   </span>
                 )}
               </div>
 
-              <div className="space-y-5">
-                <div>
-                  <div className="flex justify-between text-sm mb-2">
-                    <span className="text-gray-500 dark:text-gray-400 font-medium">Attended</span>
-                    <div className="flex items-center gap-3">
-                      <span className="font-semibold text-gray-900 dark:text-white">{presentLectures}/{totalLectures}</span>
-                      <span className={`font-bold ${!isDanger ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-                        {percentage.toFixed(0)}%
-                      </span>
-                    </div>
+              <div className="space-y-1.5 mt-1">
+                <h3 className="font-semibold leading-tight tracking-tight text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  {course.courseName}
+                </h3>
+                {bunkStatus && (
+                  <div className="pt-1">
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium border border-current/10 ${bunkStatus.bg} ${bunkStatus.color}`}>
+                      {bunkStatus.text}
+                    </span>
                   </div>
-                  <div className="h-2.5 bg-gray-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                )}
+              </div>
+
+              <div className="mt-2">
+                <button className="px-3 py-1.5 text-xs font-medium border border-gray-200 dark:border-gray-800 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                  Open
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100 dark:border-gray-800/50">
+                <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                  Attended: <strong className="text-gray-900 dark:text-gray-100">{presentLectures}/{totalLectures}</strong>
+                </span>
+                <div className="flex items-center gap-2">
+                  <div className="w-20 h-2 bg-gray-100 dark:bg-[#09090b] rounded-full overflow-hidden">
                     <div 
-                      className={`h-full ${!isDanger ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]' : 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]'} transition-all duration-1000`} 
+                      className={`h-full ${!isDanger ? 'bg-green-500' : 'bg-red-500'}`} 
                       style={{ width: `${percentage}%` }}
                     />
                   </div>
+                  <span className="text-xs font-medium text-gray-500 dark:text-gray-400">{percentage.toFixed(0)}%</span>
                 </div>
-
-                {bunkStatus && (
-                  <div className={`px-4 py-2.5 rounded-xl text-xs font-bold text-center ${bunkStatus.bg} ${bunkStatus.color} border border-opacity-20 border-current transition-colors`}>
-                    {bunkStatus.text}
-                  </div>
-                )}
               </div>
             </div>
           );
@@ -389,14 +372,14 @@ const Dashboard = ({ onLogout, dark, setDark }) => {
       >
         <div className="space-y-8 animate-pulse pt-6">
           {/* Hero Skeleton */}
-          <div className="h-48 bg-gray-200 dark:bg-slate-800 rounded-3xl w-full"></div>
+          <div className="h-48 bg-gray-200 dark:bg-[#09090b] rounded-3xl w-full"></div>
           
           {/* Subjects Grid Skeleton */}
           <div>
-            <div className="h-8 bg-gray-200 dark:bg-slate-800 rounded-lg w-48 mb-6"></div>
+            <div className="h-8 bg-gray-200 dark:bg-[#09090b] rounded-lg w-48 mb-6"></div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="h-40 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700/50"></div>
+                <div key={i} className="h-40 bg-white dark:bg-[#09090b] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800"></div>
               ))}
             </div>
           </div>
@@ -437,8 +420,8 @@ const Dashboard = ({ onLogout, dark, setDark }) => {
       {/* Lecture Details Modal */}
       {selectedCourse && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-60 sm:p-0 transition-opacity">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden w-full max-w-2xl flex flex-col max-h-[90vh]">
-            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800/80">
+          <div className="bg-white dark:bg-[#09090b] rounded-lg shadow-xl overflow-hidden w-full max-w-2xl flex flex-col max-h-[90vh]">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center bg-gray-50 dark:bg-[#121214]">
               <div>
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white">{selectedCourse.courseName}</h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400">{selectedCourse.courseCode} - Lecture History</p>

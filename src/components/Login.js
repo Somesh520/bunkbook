@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { authService } from '../services/api';
 import { Lock, User, KeyRound, AlertCircle, Loader2, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "./ui/input-otp";
 import BunkbookLogo from '../assets/logos.png';
 
 const isUuid = (value) =>
@@ -165,7 +171,7 @@ const Login = ({ onLoginSuccess, dark }) => {
       </header></div>
       <div className="w-full max-w-md mx-auto relative z-10 animate-fade-in-up">
         <div className="flex justify-center mb-6">
-          <div className="p-3 bg-white/10 dark:bg-slate-800/50 backdrop-blur-xl rounded-2xl shadow-xl shadow-blue-500/10 border border-white/20 dark:border-slate-700/50 transform hover:scale-105 transition-transform duration-300">
+          <div className="p-3 bg-white/10 dark:bg-[#121214] backdrop-blur-xl rounded-2xl shadow-xl shadow-blue-500/10 border border-white/20 dark:border-gray-800 transform hover:scale-105 transition-transform duration-300">
             <img src={BunkbookLogo} alt="Bunkbook Logo" className="h-16 w-16 object-contain" />
           </div>
         </div>
@@ -273,27 +279,24 @@ const Login = ({ onLoginSuccess, dark }) => {
                 </div>
               </>
             ) : (
-              <div className="space-y-1 animate-fade-in-up">
-                <label htmlFor="otp" className={`block text-sm font-bold ml-1 ${dark ? 'text-slate-300' : 'text-gray-700'}`}>
+              <div className="space-y-3 animate-fade-in-up flex flex-col items-center">
+                <label className={`block text-sm font-bold w-full text-center ${dark ? 'text-slate-300' : 'text-gray-700'}`}>
                   Verification Code
                 </label>
-                <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors group-focus-within:text-blue-500 text-gray-400">
-                    <KeyRound className="h-5 w-5" />
-                  </div>
-                  <input
-                    id="otp"
-                    type="text"
-                    required
-                    maxLength={6}
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    className={`block w-full pl-11 pr-4 py-3.5 sm:text-sm rounded-2xl border-2 transition-all outline-none text-center tracking-widest font-mono text-lg focus:ring-4 focus:ring-blue-500/20 ${dark
-                        ? 'bg-slate-900/50 border-slate-700 focus:border-blue-500 text-white placeholder-slate-500'
-                        : 'bg-gray-50 border-gray-200 focus:border-blue-500 text-gray-900 placeholder-gray-400 hover:bg-gray-100'
-                      }`}
-                    placeholder="------"
-                  />
+                <div className="pt-2">
+                  <InputOTP maxLength={6} value={otp} onChange={(val) => setOtp(val)}>
+                    <InputOTPGroup>
+                      <InputOTPSlot index={0} />
+                      <InputOTPSlot index={1} />
+                      <InputOTPSlot index={2} />
+                    </InputOTPGroup>
+                    <InputOTPSeparator />
+                    <InputOTPGroup>
+                      <InputOTPSlot index={3} />
+                      <InputOTPSlot index={4} />
+                      <InputOTPSlot index={5} />
+                    </InputOTPGroup>
+                  </InputOTP>
                 </div>
               </div>
             )}

@@ -224,7 +224,7 @@ const TripSimulator = () => {
         </div>
 
         {/* Date Selector Skeleton */}
-        <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-slate-700/50">
+        <div className="bg-white dark:bg-[#09090b] rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-gray-800">
           <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded-lg w-32 mb-6"></div>
           <div className="flex space-x-3 overflow-hidden">
             {[...Array(6)].map((_, i) => (
@@ -241,7 +241,7 @@ const TripSimulator = () => {
           <div className="h-6 bg-gray-200 dark:bg-slate-700 rounded-lg w-40 mb-6"></div>
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-32 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700/50"></div>
+              <div key={i} className="h-32 bg-white dark:bg-[#09090b] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800"></div>
             ))}
           </div>
         </div>
@@ -259,7 +259,7 @@ const TripSimulator = () => {
       </div>
 
       {/* Date Selector */}
-      <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-slate-700/50">
+      <div className="bg-white dark:bg-[#09090b] rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-gray-800">
         <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4">Choose Bunk Dates</h3>
         <div className="flex overflow-x-auto hide-scrollbar space-x-3 pb-4">
           {dateList.map((item, index) => {
@@ -271,7 +271,7 @@ const TripSimulator = () => {
             const dayNum = item.getDate();
             const monthName = item.toLocaleDateString('en-US', { month: 'short' });
 
-            let bgClass = "bg-gray-50 dark:bg-slate-700/50 border-gray-100 dark:border-slate-700";
+            let bgClass = "bg-gray-50 dark:bg-slate-700/50 border-gray-100 dark:border-gray-800";
             let textClass = "text-gray-900 dark:text-white";
             let subTextClass = "text-gray-500 dark:text-gray-400";
             
@@ -304,7 +304,7 @@ const TripSimulator = () => {
 
         {/* Selected Summary */}
         {selectedStart && (
-          <div className="mt-6 flex items-center justify-center bg-gray-50 dark:bg-slate-900/50 rounded-2xl p-4 border border-gray-100 dark:border-slate-700/50">
+          <div className="mt-6 flex items-center justify-center bg-gray-50 dark:bg-slate-900/50 rounded-2xl p-4 border border-gray-100 dark:border-gray-800">
             <div className="text-center flex-1">
               <div className="text-[10px] font-bold text-gray-400 tracking-wider mb-1">TRIP START</div>
               <div className="font-bold text-gray-900 dark:text-white">
@@ -351,7 +351,7 @@ const TripSimulator = () => {
             const isWarning = result.projectedPerc >= 75 && result.projectedPerc < 80;
 
             return (
-              <div key={idx} className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-slate-700/50 transition-all hover:shadow-md overflow-hidden">
+              <div key={idx} className="bg-white dark:bg-[#09090b] rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-800 transition-all hover:shadow-md overflow-hidden">
                 <div className="flex flex-col gap-3 mb-4 sm:flex-row sm:justify-between sm:items-start">
                   <div className="min-w-0 flex-1 sm:pr-4">
                     <span className="text-xs font-bold text-gray-500 dark:text-gray-400">{result.courseCode}</span>
@@ -368,7 +368,7 @@ const TripSimulator = () => {
                   )}
                 </div>
 
-                <div className="flex flex-col gap-4 py-3 border-t border-gray-50 dark:border-slate-700/50 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
+                <div className="flex flex-col gap-4 py-3 border-t border-gray-50 dark:border-gray-800 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
                   <div className="min-w-0 flex-1">
                     <div className="text-[11px] text-gray-500 dark:text-gray-400 mb-1">Current</div>
                     <div className="font-semibold text-gray-900 dark:text-white">
@@ -387,7 +387,7 @@ const TripSimulator = () => {
                 </div>
 
                 {drop > 0 && (
-                  <div className="mt-3 pt-3 border-t border-gray-50 dark:border-slate-700/50 text-xs text-gray-500 dark:text-gray-400 text-center">
+                  <div className="mt-3 pt-3 border-t border-gray-50 dark:border-gray-800 text-xs text-gray-500 dark:text-gray-400 text-center">
                     Will drop by <span className="font-bold text-red-500">-{drop.toFixed(1)}%</span> if you bunk
                   </div>
                 )}

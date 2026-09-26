@@ -80,7 +80,7 @@ const About = ({ profile }) => {
       {/* Creators Section */}
       <div>
         <h2 className="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-4 ml-2">The Creators</h2>
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors">
+        <div className="bg-white dark:bg-[#09090b] rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden transition-colors">
           <div className="divide-y divide-gray-100 dark:divide-gray-700/50">
             {teamMembers.map((member, index) => (
               <a
@@ -124,7 +124,7 @@ const About = ({ profile }) => {
       {/* Information Section */}
       <div>
         <h2 className="text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-4 ml-2">Information</h2>
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors">
+        <div className="bg-white dark:bg-[#09090b] rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden transition-colors">
           <div className="flex items-center px-6 py-5">
             <div className="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center mr-5 flex-shrink-0">
               <Shield className="w-6 h-6 text-green-600 dark:text-green-400" />

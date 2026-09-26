@@ -38,7 +38,7 @@ const ExamSection = ({ dark }) => {
   return (
     <div className="space-y-6">
       {/* Tabs */}
-      <div className="border-b border-gray-200 dark:border-gray-700">
+      <div className="border-b border-gray-200 dark:border-gray-800">
         <nav className="-mb-px flex space-x-8">
           <button
             onClick={() => setActiveTab('schedule')}
@@ -72,7 +72,7 @@ const ExamSection = ({ dark }) => {
       {/* Content */}
       <div className="pt-4">
         {activeTab === 'schedule' && (
-          <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="bg-white dark:bg-[#09090b] shadow-sm rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
             {schedule.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -85,7 +85,7 @@ const ExamSection = ({ dark }) => {
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Mode</th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  <tbody className="bg-white dark:bg-[#09090b] divide-y divide-gray-200 dark:divide-gray-700">
                     {schedule.map((exam, idx) => (
                       <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
@@ -125,7 +125,7 @@ const ExamSection = ({ dark }) => {
           <div className="space-y-6">
             {score ? (
               <>
-                <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 p-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div className="bg-white dark:bg-[#09090b] shadow-sm rounded-lg border border-gray-200 dark:border-gray-800 p-6 flex flex-col md:flex-row justify-between items-center gap-4">
                   <div>
                     <h2 className="text-xl font-bold text-gray-900 dark:text-white">{score.fullName}</h2>
                     <p className="text-gray-500 dark:text-gray-400 text-sm">Enrollment No: {score.enrollmentNo || 'N/A'}</p>
@@ -137,8 +137,8 @@ const ExamSection = ({ dark }) => {
                 </div>
 
                 {score.studentSemesterWiseMarksDetailsList?.map((semester, sIdx) => (
-                  <div key={sIdx} className="bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
-                    <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/80 flex justify-between items-center">
+                  <div key={sIdx} className="bg-white dark:bg-[#09090b] shadow-sm rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+                    <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-[#121214] flex justify-between items-center">
                       <h3 className="text-lg font-bold text-gray-900 dark:text-white">{semester.semesterName}</h3>
                       <div className="font-semibold text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 px-3 py-1 rounded shadow-sm border border-gray-200 dark:border-gray-600">
                         SGPA: {semester.sgpa?.toFixed(2) || 'N/A'}
@@ -154,7 +154,7 @@ const ExamSection = ({ dark }) => {
                             <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Status</th>
                           </tr>
                         </thead>
-                        <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        <tbody className="bg-white dark:bg-[#09090b] divide-y divide-gray-200 dark:divide-gray-700">
                           {semester.studentMarksDetailsDTO?.map((sub, idx) => {
                             // Extract primary grade
                             let grade = 'N/A';
@@ -188,7 +188,7 @@ const ExamSection = ({ dark }) => {
                 ))}
               </>
             ) : (
-              <div className="text-center py-12 bg-white dark:bg-gray-800 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700">
+              <div className="text-center py-12 bg-white dark:bg-[#09090b] shadow-sm rounded-lg border border-gray-200 dark:border-gray-800">
                 <Award className="mx-auto h-12 w-12 text-gray-300 dark:text-gray-600 mb-3" />
                 <p className="text-gray-500 dark:text-gray-400 font-medium">No exam scores available yet.</p>
               </div>
