@@ -3,7 +3,7 @@ import { User, LogOut, LayoutDashboard, FileText, FileBadge, Plane, Smartphone, 
 import BunkbookLogo from '../assets/logos.png';
 import { ThemeToggle } from './ThemeToggle';
 import { GooeyNav } from './ui/gooey-nav';
-import TechText from './ui/TechText';
+
 import { HoverBorderGradient } from './ui/hover-border-gradient';
 import { StickyBanner } from './ui/sticky-banner';
 import RotatingText from './ui/RotatingText';
