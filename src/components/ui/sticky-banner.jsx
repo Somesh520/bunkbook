@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { X, Star } from "lucide-react";
+import { X } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { motion, AnimatePresence } from "motion/react";
 

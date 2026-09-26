@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { authService } from '../services/api';
-import { Lock, User, KeyRound, AlertCircle, Loader2, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { Lock, User, AlertCircle, Loader2, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import {
   InputOTP,
   InputOTPGroup,

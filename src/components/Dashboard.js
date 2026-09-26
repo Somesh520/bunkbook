@@ -113,7 +113,6 @@ const AttendanceView = ({ attendance, courses, openCourseDetails, profile, today
 
   // Safe checks for attendance
   const presentPerc = attendance?.presentPerc || 0;
-  const absentPerc = attendance?.absentPerc || 0;
 
   return (
     <div className="space-y-8 animate-fade-in-up">
