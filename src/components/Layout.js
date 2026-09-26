@@ -44,16 +44,18 @@ const Layout = ({ children, onLogout, dark, setDark, currentTab, setCurrentTab, 
               <div className="mr-3 transition-transform group-hover:scale-105">
                 <img src={BunkbookLogo} alt="Bunkbook Logo" className="h-8 w-8 object-contain rounded-xl shadow-sm" />
               </div>
-              <div className="flex items-center">
-                <span className={`text-[22px] font-bold tracking-tight mr-1.5 ${dark ? 'text-white' : 'text-gray-900'}`}>
+              <div className="flex items-center overflow-hidden">
+                <span className={`text-[13px] sm:text-base md:text-[22px] font-bold tracking-tight mr-1 sm:mr-1.5 whitespace-nowrap ${dark ? 'text-white' : 'text-gray-900'}`}>
                   Bunkbook for
                 </span>
-                <RotatingText
-                  texts={['KIET', 'IIT GHAZIABAD', 'Students', 'You']}
-                  mainClassName="text-[22px] font-bold tracking-tight overflow-hidden text-blue-600 dark:text-blue-400"
-                  staggerDuration={0.03}
-                  rotationInterval={3000}
-                />
+                <div className="flex-1 min-w-0">
+                  <RotatingText
+                    texts={['KIET', 'IIT GHAZIABAD', 'Students', 'You']}
+                    mainClassName="flex-nowrap whitespace-nowrap text-[13px] sm:text-base md:text-[22px] font-bold tracking-tight text-blue-600 dark:text-blue-400"
+                    staggerDuration={0.03}
+                    rotationInterval={3000}
+                  />
+                </div>
               </div>
             </div>
 
