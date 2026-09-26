@@ -122,21 +122,26 @@ const AttendanceView = ({ attendance, courses, openCourseDetails, profile, today
           {/* Profile Section */}
           {profile && (
             <div className="flex items-center">
-              <div className="mr-5 sm:mr-6 flex-shrink-0 relative">
-                 {photoUrl && !imgError ? (
-                   <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full ring-2 ring-blue-500 ring-offset-2 ring-offset-white dark:ring-offset-[#09090b]">
-                     <img 
-                       src={photoUrl} 
-                       alt="Profile" 
-                       className="w-full h-full rounded-full object-cover" 
-                       onError={() => setImgError(true)}
-                     />
-                   </div>
-                 ) : (
-                   <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full ring-2 ring-blue-500 ring-offset-2 ring-offset-white dark:ring-offset-[#09090b] bg-blue-900/50 flex items-center justify-center text-blue-400 text-3xl font-bold">
-                     {profile.fullName?.charAt(0) || 'U'}
-                   </div>
-                 )}
+              <div className="mr-5 sm:mr-6 flex-shrink-0 relative group">
+                {/* Ribbon Badge on the top-left edge of the ring */}
+                <div className="absolute top-0 left-0 -translate-x-1/3 -translate-y-1/3 sm:-translate-x-1/4 sm:-translate-y-1/4 text-[28px] sm:text-[36px] z-20 -rotate-[15deg] drop-shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6 cursor-default">
+                  🎀
+                </div>
+
+                {photoUrl && !imgError ? (
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full ring-2 ring-blue-500 ring-offset-2 ring-offset-white dark:ring-offset-[#09090b] relative overflow-hidden">
+                    <img
+                      src={photoUrl}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                      onError={() => setImgError(true)}
+                    />
+                  </div>
+                ) : (
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full ring-2 ring-blue-500 ring-offset-2 ring-offset-white dark:ring-offset-[#09090b] bg-blue-900/50 flex items-center justify-center text-blue-400 text-3xl font-bold relative">
+                    {profile.fullName?.charAt(0) || 'U'}
+                  </div>
+                )}
               </div>
               <div>
                 <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white tracking-tight leading-none">{profile.fullName}</h3>
@@ -145,11 +150,11 @@ const AttendanceView = ({ attendance, courses, openCourseDetails, profile, today
                   {(() => {
                     const sem = profile.semester || profile.currentSemester || profile.studentPersonalInformation?.semester || profile.studentPersonalInformation?.currentSemester;
                     const year = profile.year || profile.currentYear || profile.studentPersonalInformation?.year || profile.studentPersonalInformation?.currentYear;
-                    
+
                     const parts = [];
                     if (year) parts.push(`Year ${year}`);
                     if (sem) parts.push(`Sem ${sem}`);
-                    
+
                     if (parts.length > 0) {
                       return (
                         <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-300 border border-blue-200 dark:border-blue-500/20 w-fit">
@@ -167,27 +172,27 @@ const AttendanceView = ({ attendance, courses, openCourseDetails, profile, today
           {/* Overall Attendance Circular Progress */}
           {attendance ? (
             <div className="flex flex-col items-center justify-center relative mt-2 sm:mt-0">
-               <div className="flex items-center justify-center relative">
-                  <svg className="w-32 h-32 sm:w-36 sm:h-36 transform -rotate-90" viewBox="0 0 144 144">
-                    <circle cx="72" cy="72" r="60" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-gray-100 dark:text-slate-800" />
-                    <circle
-                      cx="72" cy="72" r="60" stroke="currentColor" strokeWidth="12" fill="transparent"
-                      strokeDasharray={377} strokeDashoffset={377 - (377 * presentPerc) / 100}
-                      className="text-blue-500 transition-all duration-1000 ease-out"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  <div className="absolute flex flex-col items-center justify-center text-center">
-                    <span className="text-3xl sm:text-4xl font-extrabold tracking-tighter text-gray-900 dark:text-white">{presentPerc.toFixed(1)}%</span>
-                  </div>
-               </div>
-               <p className="mt-3 text-sm font-semibold text-gray-500 dark:text-slate-400 flex items-center">
-                 <Activity className="h-4 w-4 mr-1.5 text-blue-500 dark:text-blue-400" /> Overall Attendance
-               </p>
+              <div className="flex items-center justify-center relative">
+                <svg className="w-32 h-32 sm:w-36 sm:h-36 transform -rotate-90" viewBox="0 0 144 144">
+                  <circle cx="72" cy="72" r="60" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-gray-100 dark:text-slate-800" />
+                  <circle
+                    cx="72" cy="72" r="60" stroke="currentColor" strokeWidth="12" fill="transparent"
+                    strokeDasharray={377} strokeDashoffset={377 - (377 * presentPerc) / 100}
+                    className="text-blue-500 transition-all duration-1000 ease-out"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <div className="absolute flex flex-col items-center justify-center text-center">
+                  <span className="text-3xl sm:text-4xl font-extrabold tracking-tighter text-gray-900 dark:text-white">{presentPerc.toFixed(1)}%</span>
+                </div>
+              </div>
+              <p className="mt-3 text-sm font-semibold text-gray-500 dark:text-slate-400 flex items-center">
+                <Activity className="h-4 w-4 mr-1.5 text-blue-500 dark:text-blue-400" /> Overall Attendance
+              </p>
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center w-full sm:w-auto">
-               <p className="text-sm text-gray-500 dark:text-slate-400">Attendance data not available.</p>
+              <p className="text-sm text-gray-500 dark:text-slate-400">Attendance data not available.</p>
             </div>
           )}
         </div>
@@ -204,7 +209,7 @@ const AttendanceView = ({ attendance, courses, openCourseDetails, profile, today
         {courses.map((course, idx) => {
           let totalLectures = 0;
           let presentLectures = 0;
-          
+
           if (course.studentCourseCompDetails && course.studentCourseCompDetails.length > 0) {
             course.studentCourseCompDetails.forEach(comp => {
               totalLectures += comp.totalLecture || 0;
@@ -220,7 +225,7 @@ const AttendanceView = ({ attendance, courses, openCourseDetails, profile, today
           if (totalLectures > 0) {
             if (percentage >= 75) {
               const canBunk = Math.floor((presentLectures / 0.75) - totalLectures);
-              bunkStatus = canBunk > 0 
+              bunkStatus = canBunk > 0
                 ? { text: `You can bunk ${canBunk} class${canBunk > 1 ? 'es' : ''}`, color: 'text-green-600 dark:text-green-400', bg: 'bg-green-50 dark:bg-green-900/30' }
                 : { text: "On track, don't bunk next class", color: 'text-gray-600 dark:text-gray-300', bg: 'bg-gray-100 dark:bg-gray-700' };
             } else {
@@ -230,8 +235,8 @@ const AttendanceView = ({ attendance, courses, openCourseDetails, profile, today
           }
 
           return (
-            <div 
-              key={idx} 
+            <div
+              key={idx}
               onClick={() => openCourseDetails(course)}
               className="flex flex-col gap-3 p-5 bg-white dark:bg-[#09090b] text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-800 rounded-xl shadow-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-[#121214] transition-colors group"
             >
@@ -241,15 +246,14 @@ const AttendanceView = ({ attendance, courses, openCourseDetails, profile, today
                   <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">{course.courseCode}</span>
                 </div>
                 {todayStatus && (
-                  <span className={`px-2 py-0.5 text-[10px] font-semibold rounded-md border ${
-                    todayStatus === 'PRESENT' ? 'bg-green-100/50 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800/50' :
+                  <span className={`px-2 py-0.5 text-[10px] font-semibold rounded-md border ${todayStatus === 'PRESENT' ? 'bg-green-100/50 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800/50' :
                     todayStatus === 'ABSENT' ? 'bg-red-100/50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800/50' :
-                    todayStatus === 'SCHEDULED' ? 'bg-blue-100/50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800/50' :
-                    'bg-amber-100/50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800/50'
-                  }`}>
+                      todayStatus === 'SCHEDULED' ? 'bg-blue-100/50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800/50' :
+                        'bg-amber-100/50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800/50'
+                    }`}>
                     {todayStatus === 'PRESENT' ? 'Present Today' :
                       todayStatus === 'ABSENT' ? 'Absent Today' :
-                      todayStatus === 'SCHEDULED' ? 'Upcoming' : 'No Data'}
+                        todayStatus === 'SCHEDULED' ? 'Upcoming' : 'No Data'}
                   </span>
                 )}
               </div>
@@ -279,8 +283,8 @@ const AttendanceView = ({ attendance, courses, openCourseDetails, profile, today
                 </span>
                 <div className="flex items-center gap-2">
                   <div className="w-20 h-2 bg-gray-100 dark:bg-[#09090b] rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full ${!isDanger ? 'bg-green-500' : 'bg-red-500'}`} 
+                    <div
+                      className={`h-full ${!isDanger ? 'bg-green-500' : 'bg-red-500'}`}
                       style={{ width: `${percentage}%` }}
                     />
                   </div>
@@ -317,7 +321,7 @@ const Dashboard = ({ onLogout, dark, setDark }) => {
           dataService.getRegisteredCourses(),
           dataService.getStudentProfileInfo()
         ]);
-        
+
         if (dashAtt) setAttendance(dashAtt);
         if (regCourses) setCourses(regCourses);
         if (profileInfo) setProfile(profileInfo);
@@ -328,7 +332,7 @@ const Dashboard = ({ onLogout, dark, setDark }) => {
         setIsLoading(false);
       }
     };
-    
+
     fetchData();
   }, []);
 
@@ -361,18 +365,18 @@ const Dashboard = ({ onLogout, dark, setDark }) => {
 
   if (isLoading) {
     return (
-      <Layout 
-        onLogout={handleLogout} 
-        dark={dark} 
-        setDark={setDark} 
-        currentTab={currentTab} 
+      <Layout
+        onLogout={handleLogout}
+        dark={dark}
+        setDark={setDark}
+        currentTab={currentTab}
         setCurrentTab={setCurrentTab}
         profile={profile}
       >
         <div className="space-y-8 animate-pulse pt-6">
           {/* Hero Skeleton */}
           <div className="h-48 bg-gray-200 dark:bg-[#09090b] rounded-3xl w-full"></div>
-          
+
           {/* Subjects Grid Skeleton */}
           <div>
             <div className="h-8 bg-gray-200 dark:bg-[#09090b] rounded-lg w-48 mb-6"></div>
@@ -388,32 +392,32 @@ const Dashboard = ({ onLogout, dark, setDark }) => {
   }
 
   return (
-    <Layout 
-      onLogout={handleLogout} 
-      dark={dark} 
-      setDark={setDark} 
-      currentTab={currentTab} 
+    <Layout
+      onLogout={handleLogout}
+      dark={dark}
+      setDark={setDark}
+      currentTab={currentTab}
       setCurrentTab={setCurrentTab}
       profile={profile}
     >
       {currentTab === 'dashboard' && (
-        <AttendanceView 
-          attendance={attendance} 
-          courses={courses} 
-          openCourseDetails={openCourseDetails} 
+        <AttendanceView
+          attendance={attendance}
+          courses={courses}
+          openCourseDetails={openCourseDetails}
           profile={profile}
           todayStatuses={todayStatuses}
         />
       )}
-      
+
       {currentTab === 'simulator' && <TripSimulator />}
 
       {currentTab === 'schedule' && <Schedule dark={dark} />}
-      
+
       {currentTab === 'exam' && <ExamSection dark={dark} />}
-      
+
       {currentTab === 'hallticket' && <HallTicket profile={profile} />}
-      
+
       {currentTab === 'about' && <About profile={profile} />}
 
       {/* Lecture Details Modal */}
@@ -425,14 +429,14 @@ const Dashboard = ({ onLogout, dark, setDark }) => {
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white">{selectedCourse.courseName}</h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400">{selectedCourse.courseCode} - Lecture History</p>
               </div>
-              <button 
+              <button
                 onClick={closeCourseDetails}
                 className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
               >
                 <X className="h-6 w-6" />
               </button>
             </div>
-            
+
             <div className="p-6 overflow-y-auto flex-1 bg-white dark:bg-gray-900">
               {isLecturesLoading ? (
                 <div className="flex justify-center items-center py-12">
@@ -443,53 +447,53 @@ const Dashboard = ({ onLogout, dark, setDark }) => {
                   {[...lectures]
                     .sort((a, b) => new Date(b.planLecDate) - new Date(a.planLecDate))
                     .map((lecture, i) => {
-                    const isPresent = lecture.attendance?.toUpperCase() === 'PRESENT';
-                    
-                    // Format date (e.g. "2026-08-21" -> "Aug 21")
-                    let formattedDate = lecture.planLecDate;
-                    try {
-                      if (formattedDate) {
-                        const d = new Date(formattedDate);
-                        if (!isNaN(d.getTime())) {
-                          formattedDate = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                        }
-                      }
-                    } catch(e) {}
+                      const isPresent = lecture.attendance?.toUpperCase() === 'PRESENT';
 
-                    return (
-                      <div 
-                        key={i} 
-                        className={`p-4 rounded-lg border flex items-start animate-fade-in-up ${isPresent ? 'border-green-100 dark:border-green-900/50 bg-green-50/30 dark:bg-green-900/20' : 'border-red-100 dark:border-red-900/50 bg-red-50/30 dark:bg-red-900/20'}`}
-                        style={{ animationDelay: `${i * 0.05}s` }}
-                      >
-                        <div className="mr-4 mt-0.5">
-                          {isPresent ? (
-                            <CheckCircle2 className="h-6 w-6 text-green-500 dark:text-green-400" />
-                          ) : (
-                            <XCircle className="h-6 w-6 text-red-500 dark:text-red-400" />
-                          )}
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex justify-between flex-wrap gap-2">
-                            <span className={`font-semibold text-sm ${isPresent ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}>
-                              {lecture.attendance}
-                            </span>
-                            <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 space-x-3">
-                              <span className="flex items-center">
-                                <Calendar className="h-3 w-3 mr-1" />
-                                {formattedDate}
-                              </span>
-                            </div>
+                      // Format date (e.g. "2026-08-21" -> "Aug 21")
+                      let formattedDate = lecture.planLecDate;
+                      try {
+                        if (formattedDate) {
+                          const d = new Date(formattedDate);
+                          if (!isNaN(d.getTime())) {
+                            formattedDate = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                          }
+                        }
+                      } catch (e) { }
+
+                      return (
+                        <div
+                          key={i}
+                          className={`p-4 rounded-lg border flex items-start animate-fade-in-up ${isPresent ? 'border-green-100 dark:border-green-900/50 bg-green-50/30 dark:bg-green-900/20' : 'border-red-100 dark:border-red-900/50 bg-red-50/30 dark:bg-red-900/20'}`}
+                          style={{ animationDelay: `${i * 0.05}s` }}
+                        >
+                          <div className="mr-4 mt-0.5">
+                            {isPresent ? (
+                              <CheckCircle2 className="h-6 w-6 text-green-500 dark:text-green-400" />
+                            ) : (
+                              <XCircle className="h-6 w-6 text-red-500 dark:text-red-400" />
+                            )}
                           </div>
-                          {lecture.topicCovered && (
-                            <p className="mt-2 text-sm text-gray-700 dark:text-gray-300 font-medium">
-                              {lecture.topicCovered}
-                            </p>
-                          )}
+                          <div className="flex-1">
+                            <div className="flex justify-between flex-wrap gap-2">
+                              <span className={`font-semibold text-sm ${isPresent ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}>
+                                {lecture.attendance}
+                              </span>
+                              <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 space-x-3">
+                                <span className="flex items-center">
+                                  <Calendar className="h-3 w-3 mr-1" />
+                                  {formattedDate}
+                                </span>
+                              </div>
+                            </div>
+                            {lecture.topicCovered && (
+                              <p className="mt-2 text-sm text-gray-700 dark:text-gray-300 font-medium">
+                                {lecture.topicCovered}
+                              </p>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
                 </div>
               ) : (
                 <div className="text-center py-12">

@@ -6,6 +6,7 @@ import { GooeyNav } from './ui/gooey-nav';
 import TechText from './ui/TechText';
 import { HoverBorderGradient } from './ui/hover-border-gradient';
 import { StickyBanner } from './ui/sticky-banner';
+import RotatingText from './ui/RotatingText';
 
 const Layout = ({ children, onLogout, dark, setDark, currentTab, setCurrentTab, profile }) => {
   const navItems = [
@@ -43,13 +44,15 @@ const Layout = ({ children, onLogout, dark, setDark, currentTab, setCurrentTab, 
               <div className="mr-3 transition-transform group-hover:scale-105">
                 <img src={BunkbookLogo} alt="Bunkbook Logo" className="h-8 w-8 object-contain rounded-xl shadow-sm" />
               </div>
-              <div className="h-8 w-48 sm:w-64">
-                <TechText
-                  text="Bunkbook for KIET"
-                  fontSize={22}
-                  fontWeight={700}
-                  color={dark ? '#ffffff' : '#111827'}
-                  accentColor={dark ? '#3b82f6' : '#2563eb'}
+              <div className="flex items-center">
+                <span className={`text-[22px] font-bold tracking-tight mr-1.5 ${dark ? 'text-white' : 'text-gray-900'}`}>
+                  Bunkbook for
+                </span>
+                <RotatingText
+                  texts={['KIET', 'IIT GHAZIABAD', 'Students', 'You']}
+                  mainClassName="text-[22px] font-bold tracking-tight overflow-hidden text-blue-600 dark:text-blue-400"
+                  staggerDuration={0.03}
+                  rotationInterval={3000}
                 />
               </div>
             </div>
