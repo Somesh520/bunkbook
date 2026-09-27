@@ -7,6 +7,7 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "./ui/input-otp";
+import LinkButton from "./ui/Link"
 import BunkbookLogo from '../assets/logos.png';
 
 
@@ -165,11 +166,12 @@ const Login = ({ onLoginSuccess, dark }) => {
       {/* Decorative blobs */}
       <div className={`absolute top-0 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-20 pointer-events-none transition-colors duration-700 ${dark ? 'bg-blue-600' : 'bg-blue-300'}`}></div>
       <div className={`absolute bottom-0 right-1/4 w-96 h-96 rounded-full blur-3xl opacity-20 pointer-events-none transition-colors duration-700 ${dark ? 'bg-purple-600' : 'bg-purple-300'}`}></div>
-      <div><header className="py-4 text-center text-sm font-large text-blue-700 dark:text-blue-400">
-        Download Our Native app for speed and convenience <a href="https://github.com/Somesh520/Kietkt/releases/tag/v1.1.6" target="_blank" rel="noopener noreferrer" className="text-red-500 dark:text-red-400 hover:underline">
-          Download Now
-        </a>
-      </header></div>
+      <div>
+        <header className="py-4 flex flex-wrap items-center justify-center gap-2 text-center text-sm font-large text-blue-700 dark:text-blue-400">
+          <span>Download Our Native app for speed and convenience</span>
+          <LinkButton className='let' btnText="Download Now" href="https://github.com/Somesh520/Kietkt/releases/tag/v1.1.6" />
+        </header>
+      </div>
       <div className="w-full max-w-md mx-auto relative z-10 animate-fade-in-up">
         <div className="flex justify-center mb-6">
           <div className="p-3 bg-white/10 dark:bg-[#121214] backdrop-blur-xl rounded-2xl shadow-xl shadow-blue-500/10 border border-white/20 dark:border-gray-800 transform hover:scale-105 transition-transform duration-300">
