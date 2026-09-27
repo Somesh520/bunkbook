@@ -9,6 +9,7 @@ import {
 } from "./ui/input-otp";
 import BunkbookLogo from '../assets/logos.png';
 
+
 const isUuid = (value) =>
   typeof value === 'string' &&
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value.trim());
@@ -158,7 +159,7 @@ const Login = ({ onLoginSuccess, dark }) => {
   };
 
   return (
-    
+
     <div className={`min-h-screen flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 font-sans ${dark ? 'bg-slate-900 text-white' : 'bg-gray-50 text-gray-900'} relative overflow-hidden`}>
 
       {/* Decorative blobs */}
@@ -180,8 +181,7 @@ const Login = ({ onLoginSuccess, dark }) => {
           <div className="flex items-center justify-center text-lg mt-1 font-bold text-gray-500 dark:text-gray-400 gap-1.5">
             <span>for</span>
             <div className="flex items-center">
-              <img src={BunkbookLogo} alt="K" className="h-[18px] w-auto object-contain -mr-0.5" />
-              <span>IET</span>
+              <span className="font-telma tracking-normal ml-1 text-2xl font-medium">KIET</span>
             </div>
           </div>
         </h2>
@@ -218,8 +218,8 @@ const Login = ({ onLoginSuccess, dark }) => {
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       className={`block w-full pl-11 pr-4 py-3.5 sm:text-sm rounded-2xl border-2 transition-all outline-none focus:ring-4 focus:ring-blue-500/20 ${dark
-                          ? 'bg-slate-900/50 border-slate-700 focus:border-blue-500 text-white placeholder-slate-500'
-                          : 'bg-gray-50 border-gray-200 focus:border-blue-500 text-gray-900 placeholder-gray-400 hover:bg-gray-100'
+                        ? 'bg-slate-900/50 border-slate-700 focus:border-blue-500 text-white placeholder-slate-500'
+                        : 'bg-gray-50 border-gray-200 focus:border-blue-500 text-gray-900 placeholder-gray-400 hover:bg-gray-100'
                         }`}
                       placeholder="Enter your username"
                     />
@@ -241,8 +241,8 @@ const Login = ({ onLoginSuccess, dark }) => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className={`block w-full pl-11 pr-12 py-3.5 sm:text-sm rounded-2xl border-2 transition-all outline-none focus:ring-4 focus:ring-blue-500/20 ${dark
-                          ? 'bg-slate-900/50 border-slate-700 focus:border-blue-500 text-white placeholder-slate-500'
-                          : 'bg-gray-50 border-gray-200 focus:border-blue-500 text-gray-900 placeholder-gray-400 hover:bg-gray-100'
+                        ? 'bg-slate-900/50 border-slate-700 focus:border-blue-500 text-white placeholder-slate-500'
+                        : 'bg-gray-50 border-gray-200 focus:border-blue-500 text-gray-900 placeholder-gray-400 hover:bg-gray-100'
                         }`}
                       placeholder="Enter your password"
                     />
@@ -266,8 +266,8 @@ const Login = ({ onLoginSuccess, dark }) => {
                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                       />
                       <div className={`w-5 h-5 rounded border-2 transition-colors flex items-center justify-center ${rememberMe
-                          ? 'bg-blue-600 border-blue-600'
-                          : dark ? 'border-slate-600 group-hover:border-blue-400' : 'border-gray-300 group-hover:border-blue-400'
+                        ? 'bg-blue-600 border-blue-600'
+                        : dark ? 'border-slate-600 group-hover:border-blue-400' : 'border-gray-300 group-hover:border-blue-400'
                         }`}>
                         {rememberMe && (
                           <svg className="w-3.5 h-3.5 text-white pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>

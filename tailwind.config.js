@@ -6,6 +6,8 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['Outfit', 'sans-serif'],
+        telma: ['Telma', 'cursive'],
+        sharpie: ["Sharpie Pencil", 'cursive']
       },
     },
   },
